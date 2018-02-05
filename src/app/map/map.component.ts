@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
+import { MatSnackBar } from '@angular/material';
+
 declare var google: any;
 declare var MarkerClusterer: any;
+var mensagem: string;
 
 @Component({
   selector: 'app-map',
@@ -9,17 +12,19 @@ declare var MarkerClusterer: any;
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+  showFiller = false;
   @ViewChild('map') mapRef: ElementRef;
   map: any;
   poligonos: any;
   polbool: any;
   markers: any;
   pesquisa: any;
-  getNativeDocument(): any { return document; }
-  constructor() { }
 
+  getNativeDocument(): any { return document; }
+  constructor(public snackBar: MatSnackBar) {
+  }
   ngOnInit() {
-    
+
     this.pesquisa = new Array();
     this.poligonos = new Array();
     this.polbool = new Array();
@@ -60,7 +65,7 @@ export class MapComponent implements OnInit {
     let element = document.getElementById('map');
     this.map = new google.maps.Map(element, options);
     this.pesquisa = new Array();
-    document.getElementById('info').innerHTML = "";
+    //document.getElementById('info').innerHTML = "";
 
 
     this.addDrawingManager();
@@ -114,11 +119,12 @@ export class MapComponent implements OnInit {
 
   }
   imprimeMarkers(markersArray) {
-    
+
     this.showMap();
     var t0 = performance.now();
+    var _self = this;
     this.markers = markersArray.map(function (location, i) {
-      
+
       var marker = new google.maps.Marker({
         position: location,
         id: i,
@@ -130,18 +136,28 @@ export class MapComponent implements OnInit {
         estadocivil: 'solteiro',
         calcado: 'tenis',
         cpf: '000.000.000-00'
-        
+
       });
       marker.addListener('click', function () {
-        document.getElementById('infoPessoa').innerHTML = "id = " + marker.get("id") +
-        "<br>nome = " + marker.get("nome")+
-        "<br>idade = " + marker.get("idade")+
-        "<br>sexo = " + marker.get("sexo")+
-        "<br>cidade = " + marker.get("cidade")+
-        "<br>tamanho = " + marker.get("tamanho")+
-        "<br>estadocivil = " + marker.get("estadocivil")+
-        "<br>calcado = " + marker.get("calcado")+
-        "<br>cpf = " + marker.get("cpf");
+        var message = "id                 " + marker.get("id") +
+          "\nnome           " + marker.get("nome") +
+          "\nidade           " + marker.get("idade") +
+          "\nsexo            " + marker.get("sexo") +
+          "\ncidade         " + marker.get("cidade") +
+          "\ntamanho      " + marker.get("tamanho") +
+          "\nestadocivil   " + marker.get("estadocivil") +
+          "\ncalcado       " + marker.get("calcado") +
+          "\ncpf              " + marker.get("cpf");
+        _self.openSnackBar(message, "Fechar");
+        //document.getElementById('infoPessoa').innerHTML = "id = " + marker.get("id") +
+        //"<br>nome = " + marker.get("nome")+
+        //"<br>idade = " + marker.get("idade")+
+        //"<br>sexo = " + marker.get("sexo")+
+        //"<br>cidade = " + marker.get("cidade")+
+        //"<br>tamanho = " + marker.get("tamanho")+
+        //"<br>estadocivil = " + marker.get("estadocivil")+
+        //"<br>calcado = " + marker.get("calcado")+
+        //"<br>cpf = " + marker.get("cpf");
         //console.log(marker.get("readfasdfgh"));
         //var infowindow = new google.maps.InfoWindow({
         //  content: 'aiai'
@@ -151,8 +167,8 @@ export class MapComponent implements OnInit {
       return marker;
     });
     var t1 = performance.now();
-    
-    console.log("time = "+(t1-t0)+"ms");
+
+    console.log("time = " + (t1 - t0) + "ms");
   }
   addDrawingManager() {
     var drawingManager = new google.maps.drawing.DrawingManager({
@@ -201,16 +217,27 @@ export class MapComponent implements OnInit {
           markerCnt++;
         }
       }
-      document.getElementById('info').innerHTML = "markers in polygon: " + markerCnt;
+
+      // /////////
+      // for(var i =0; i<_self.poligonos.length;i++){
+      //   if(_self.polbool[i]==true){
+      //     var teste = new Array();
+      //     teste = _self.poligonos[i].getPath();
+      //     for(var j=0;j<teste.length;j++){
+      //       //console.log(JSON.stringify(teste[j]));
+      //     }
+      //   }
+      // }
+      /////////
+      //document.getElementById('info').innerHTML = "markers in polygon: " + markerCnt;
       _self.imprimepesquisa();
       polygon.getPath().addListener('set_at', function (poligono) {
         var markerCnt = 0;
         _self.pesquisa = new Array();
         for (var i = 0; i < _self.poligonos.length; i++) {
           var poligono = _self.poligonos[i];
-          console.log(typeof (poligono));
           for (var j = 0; j < _self.markers.length; j++) {
-            if(_self.polbool[i]==false){
+            if (_self.polbool[i] == false) {
               if (poligono.getBounds().contains(_self.markers[j].getPosition())) {
                 _self.pesquisa.push(_self.markers[j].getPosition());
                 markerCnt++;
@@ -247,7 +274,7 @@ export class MapComponent implements OnInit {
           markerCnt++;
         }
       }
-      document.getElementById('info').innerHTML = "markers in circle: " + markerCnt;
+      //document.getElementById('info').innerHTML = "markers in circle: " + markerCnt;
       _self.imprimepesquisa();
       circle.addListener('bounds_changed', function (circle) {
         var markerCnt = 0;
@@ -255,8 +282,8 @@ export class MapComponent implements OnInit {
         for (var i = 0; i < _self.poligonos.length; i++) {
           var circulo = _self.poligonos[i];
           for (var j = 0; j < _self.markers.length; j++) {
-            
-            if(_self.polbool[i]==false){
+
+            if (_self.polbool[i] == false) {
               if (circulo.getBounds().contains(_self.markers[j].getPosition())) {
                 _self.pesquisa.push(_self.markers[j].getPosition());
                 markerCnt++;
@@ -293,7 +320,7 @@ export class MapComponent implements OnInit {
           markerCnt++;
         }
       }
-      document.getElementById('info').innerHTML = "markers in rectangle: " + markerCnt;
+      //document.getElementById('info').innerHTML = "markers in rectangle: " + markerCnt;
       _self.imprimepesquisa();
       rectangle.addListener('bounds_changed', function (rectangle) {
         var markerCnt = 0;
@@ -302,7 +329,7 @@ export class MapComponent implements OnInit {
           var quadrado = _self.poligonos[i];
           console.log(typeof (quadrado));
           for (var j = 0; j < _self.markers.length; j++) {
-            if(_self.polbool[i]==false){
+            if (_self.polbool[i] == false) {
               if (quadrado.getBounds().contains(_self.markers[j].getPosition())) {
                 _self.pesquisa.push(_self.markers[j].getPosition());
                 markerCnt++;
@@ -326,7 +353,7 @@ export class MapComponent implements OnInit {
   }
   imprimepesquisa() {
     console.log(this.pesquisa);
-    document.getElementById('info').innerHTML += "<br>Quantidade de pontos da pesquisa: " + this.pesquisa.length;
+    //document.getElementById('info').innerHTML += "<br>Quantidade de pontos da pesquisa: " + this.pesquisa.length;
     //this.showMap();
     //this.imprimeMarkers(this.pesquisa);
 
@@ -335,5 +362,30 @@ export class MapComponent implements OnInit {
 
   getRandom(min, max) {
     return Math.random() * (max - min) + min;
+  }
+  /////////////////////////
+  //Estilização
+  /////////////////////////
+  openSnackBar(message: string, action: string) {
+    mensagem = message;
+    this.snackBar.openFromComponent(MessageComponent);
+    //this.snackBar.open(message, action, {
+      
+
+    //});
+  }
+}
+@Component({
+  selector: 'map.component',
+  template: `<span class="example-pizza-party" style="white-space: pre;">Cliente:<br>{{message}}<br></span><a (click)="dismiss()" style="color:orange;">Fechar</a>`,
+  styles: [`.example-pizza-party {color: white; font-family: Arial;}`],
+})
+export class MessageComponent {
+  message:string;
+  constructor(public snackBar: MatSnackBar){
+    this.message = mensagem;
+  }
+  dismiss(){
+    this.snackBar.dismiss();
   }
 }

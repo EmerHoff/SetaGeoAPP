@@ -1,7 +1,11 @@
-<button (click)="showMap()">Mostrar/Limpar Mapa</button>
-<button (click)="addHeatMap()">Mostrar Markers</button>
+<mat-toolbar color="primary" >
+    <mat-toolbar-row>
+        <span>SetaDigital</span>
+        <span class="example-spacer"></span>
+        <button (click)="showMap()">Mostrar/Limpar Mapa</button>
+        <button (click)="addHeatMap()">Mostrar Markers</button>
+    </mat-toolbar-row>
+</mat-toolbar>
 <div #map id="map"></div>
-<br>Pessoa
 <div #infoPessoa id="infoPessoa"></div>
-<br>Poligono
 <div #info id="info"></div>
