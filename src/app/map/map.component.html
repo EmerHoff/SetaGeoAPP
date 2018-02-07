@@ -1,11 +1,52 @@
-<mat-toolbar color="primary" >
+<body>
+    <!--Menu Lateral-->
+
+<div id="myMenu" class="sidenav">
+    <h1>&#9776;Menu</h1><a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+    <a href="#">Favoritos</a>
+    <a href="#">Relatórios</a>
+    <a href="#">Clientes</a>
+    <a href="#">Configurações</a>
+    <button>Sair</button>
+</div>
+
+<!--Barra-->
+<mat-toolbar class="bar">
     <mat-toolbar-row>
-        <span>SetaDigital</span>
-        <span class="example-spacer"></span>
-        <button (click)="showMap()">Mostrar/Limpar Mapa</button>
-        <button (click)="addHeatMap()">Mostrar Markers</button>
+        <span (click)="openNav()">&#9776;Menu</span>
+        <span class="spacer"></span>
+        <div class="container">
+            <img src="../../assets/LOGO-PARA-LARANJA.png"/>
+        </div>        
     </mat-toolbar-row>
 </mat-toolbar>
+
+<!--Botoes-->
+<button class="buttonStyle1" (click)="showMap()">Mostrar/Limpar Mapa</button>
+<button class="buttonStyle2" (click)="addHeatMap()"> Mostrar Markers </button>
+<!-- 
+<div class="container">
+    <div class="row">
+        <div class="search">
+            <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+        <div class="row">
+            <div class="search">
+    <input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
+     <button type="submit" class="btn btn-primary btn-sm">Search</button>
+    </div>
+        </div>
+    </div>
+-->
+
+<!--Mapa-->
 <div #map id="map"></div>
 <div #infoPessoa id="infoPessoa"></div>
 <div #info id="info"></div>
+
+</body>

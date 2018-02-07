@@ -51,6 +51,16 @@ export class MapComponent implements OnInit {
     document.head.appendChild(script2);
 
   }
+
+  openNav() {
+     document.getElementById("myMenu").style.width = "200px";
+     document.getElementById("myMenu").style.marginTop = "5.8%";
+  }
+
+  closeNav() {
+      document.getElementById("myMenu").style.width = "0";
+  }
+
   showMap() {
 
     console.log('Google Maps Working!');
