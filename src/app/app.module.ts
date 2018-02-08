@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 
 import { AgmCoreModule } from '@agm/core';
 import { MapComponent, MessageComponent} from './map/map.component';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -43,12 +44,14 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
+import { HighmapComponent } from './highmap/highmap.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    MessageComponent
+    MessageComponent,
+    HighmapComponent
   ],
   entryComponents: [
     MessageComponent

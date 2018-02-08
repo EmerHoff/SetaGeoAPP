@@ -50,11 +50,13 @@ export class MapComponent implements OnInit {
     script2.src = callbackName2;
     document.head.appendChild(script2);
 
+    
+
   }
 
   openNav() {
-     document.getElementById("myMenu").style.width = "200px";
-     document.getElementById("myMenu").style.marginTop = "5.8%";
+     document.getElementById("myMenu").style.width = "50%";
+     document.getElementById("myMenu").style.marginTop = "21px";
   }
 
   closeNav() {

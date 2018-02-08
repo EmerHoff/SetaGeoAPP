@@ -24,8 +24,8 @@
 </mat-toolbar>
 
 <!--Botoes-->
-<button class="buttonStyle1" (click)="showMap()">Mostrar/Limpar Mapa</button>
-<button class="buttonStyle2" (click)="addHeatMap()"> Mostrar Markers </button>
+<button class="buttonStyle1" (click)="action()">Mostrar/Limpar Mapa</button>
+<button class="buttonStyle2"> Mostrar Markers </button>
 
 <!--<div class="container">
     <div class="row">
@@ -37,9 +37,18 @@
 </div>-->
 
 
-<!--Mapa-->
-<div #map id="map"></div>
-<div #infoPessoa id="infoPessoa"></div>
-<div #info id="info"></div>
+<!--Map Brazil with Points-->
+<!--<div id="container"></div>
+
+<input type="radio" name="series" value="points" id="points" checked="checked" />-->
+
+
+<!--Map Brazil with Color-->
+
+<div id="mapa"></div>
 
 </body>
+
+
+
+

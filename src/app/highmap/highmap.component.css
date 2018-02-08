@@ -134,7 +134,7 @@ img {
     outline: none;
     position: relative;
     transition: all 0.3s;
-    background: #474747;
+    background: #d1cfcf;
     color: #fff;
     border-radius: 7px;
     box-shadow: 0 2px #363636;
@@ -185,4 +185,16 @@ padding: 6px 0;
 top: 11px;
 cursor: pointer;
 z-index: 1;
+}
+
+#mapa {
+    height: 500px; 
+    min-width: 310px; 
+    max-width: 800px; 
+    margin: 0 auto; 
+}
+.loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
 }
