@@ -17,4 +17,9 @@ export class MapIndexService {
         var dataUrl = 'assets/geojson/' + nameClicked + '.json';
         return this.http.get(dataUrl);
     }
+
+    getValues() {
+        var configUrl = 'https://cdn.rawgit.com/highcharts/highcharts/v6.0.4/samples/data/us-population-density.json';
+        return this.http.get(configUrl);
+    }
 }

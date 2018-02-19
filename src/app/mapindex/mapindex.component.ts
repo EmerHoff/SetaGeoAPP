@@ -14,6 +14,7 @@ export class MapindexComponent implements OnInit {
     
     public json: any;
     public values: any;
+    public dados: any;
     constructor(private clienteService: MapIndexService) {
 
     }
@@ -21,7 +22,7 @@ export class MapindexComponent implements OnInit {
     ngOnInit() {
 
         //melhorar a forma de armazenamento 
-         this.values = {
+         /*this.values = {
             'SETA.BR.RS': 3104,
             'SETA.BR.ES': 1299,
             'SETA.BR.PA': 503,
@@ -100,8 +101,12 @@ export class MapindexComponent implements OnInit {
             'SETA.BR.PR.CASCAVEL.PIONEIROS CATARINENSES': 22,
             'SETA.BR.PR.CASCAVEL.SANTA CRUZ': 20,
             'SETA.BR.PR.CASCAVEL.NOVA CIDADE': 17
-        }
+         }*/
 
+        //chama json com os valores
+        this.clienteService.getValues().subscribe(clienteResult => {
+            this.dados = clienteResult;
+        });
 
         this.clienteService.getConfig().subscribe(clienteResult => {
             this.json = clienteResult;
@@ -109,16 +114,21 @@ export class MapindexComponent implements OnInit {
 
             //puxa o primeiro mapa principal, que é "SETA.BR"
             var data = Highcharts.geojson(Highcharts.maps['SETA.BR']);
-            //console.log(data);
-            // Some responsiveness
-            //small = $('#container').width() < 400;
 
             //preenche os primeiros 
             var _self = this;
-            data.forEach(function (i) {
-                //console.log(i);
+            /*data.forEach(function (i) {
                 i.drilldown = i.properties['hc-key'];
-                i.value = _self.values[i.properties['hc-key']];
+                i.value = _self.values[i.properties['hc-key']];    
+            });*/
+
+            //preenche os primeiros 
+            //Adiciona os valores do json chamado
+            var count = 0;
+            data.forEach(function (i) {
+                i.drilldown = i.properties['hc-key'];  
+                i.value = _self.dados[count].value;
+                count++;
             });
 
             // Instantiate the map
@@ -161,7 +171,7 @@ export class MapindexComponent implements OnInit {
                                     //data = Highcharts.geojson(Highcharts.maps[mapKey]);
                                     console.log(data);
                                     
-                                    data.forEach(function (i) {
+                                    /*data.forEach(function (i) {
                                         var value = _self.values[i.properties['hc-key']];
                                         
                                         if (value != undefined) {
@@ -171,7 +181,35 @@ export class MapindexComponent implements OnInit {
                                         }
                                         //TODO no terceiro nivel não pode existir mais drilldown.
                                         i.drilldown = i.properties['hc-key'];
+                                        count++;
+                                    });*/
+                                    
+
+                                    var count = 0;
+                                    var _newself = _self;
+                                    console.log(_self.dados[count].value);
+
+                                    data.forEach(function (i) {
+                                        //var value = _self.values[i.properties['hc-key']];
+                                        if(count <= 45){
+                                            i.value = _newself.dados[count].value;
+                                        }
+                                        else {
+                                            i.value = 100;
+                                        }
+                                        
+                                        //console.log(i.value);  
+                                        /*if (value != undefined) {
+                                            i.value = value;
+                                        } else {
+                                            i.value = 0;
+                                        }*/
+                                        //TODO no terceiro nivel não pode existir mais drilldown.
+                                        i.drilldown = i.properties['hc-key'];
+                                        count++;
                                     });
+
+                                    console.log('saiu');
 
                                     // Hide loading and add series
                                     chart.hideLoading();
