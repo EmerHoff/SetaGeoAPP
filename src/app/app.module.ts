@@ -45,13 +45,18 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import { HighmapComponent } from './highmap/highmap.component';
+import { MapindexComponent } from './mapindex/mapindex.component';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http/src/client';
+import { MapIndexService } from './mapindex/mapindex.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     MessageComponent,
-    HighmapComponent
+    HighmapComponent,
+    MapindexComponent
   ],
   entryComponents: [
     MessageComponent
@@ -67,7 +72,8 @@ import { HighmapComponent } from './highmap/highmap.component';
     MatSnackBarModule,
     BrowserModule,
     BrowserAnimationsModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    HttpClientModule
   ],
   exports: [
     CdkTableModule,
@@ -103,7 +109,7 @@ import { HighmapComponent } from './highmap/highmap.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [MapIndexService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
