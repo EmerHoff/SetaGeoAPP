@@ -105,7 +105,7 @@ export class MapindexComponent implements OnInit {
 
         //chama json com os valores
         this.clienteService.getValues().subscribe(clienteResult => {
-            this.dados = clienteResult;
+            this.dados = this.clienteService.contagemPessoaUFs('BR');
         });
 
         this.clienteService.getConfig().subscribe(clienteResult => {
