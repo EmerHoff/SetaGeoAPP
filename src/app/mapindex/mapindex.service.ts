@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable, ObservableInput } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class MapIndexService {
@@ -28,45 +29,48 @@ export class MapIndexService {
         return this.http.get(configUrl);
     }
 
-    contagemPessoaBairros(pais: string, estado: string, cidade: string) {
+    contagemPessoaBairros(pais: string, estado: string, cidade: string): Observable<any> {
         const url = `${this.contagemPessoas}/${pais}/${estado}/${cidade}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     } 
-    contagemPessoaCidades(pais: string, estado: string) {
+    contagemPessoaCidades(pais: string, estado: string): Observable<any> {
         const url = `${this.contagemPessoas}/${pais}/${estado}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
-    contagemPessoaUFs(pais: string) {
+    contagemPessoaUFs(pais: string): Observable<any> {
         const url = `${this.contagemPessoas}/${pais}`;
         console.log(url);
-        var a = this.http.get(url);
-        return  a;
+        // var a = this.http.get(url).subscribe(json => {
+        //     console.log(json);
+        // });
+        return  this.http.get(url).map((response: Response) => response);
+        
     }
 
-    marcaContagemBairros(pais: string, estado: string, cidade: string) {
+    marcaContagemBairros(pais: string, estado: string, cidade: string): Observable<any> {
         const url = `${this.marcaContagem}/${pais}/${estado}/${cidade}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
-    marcaContagemCidades(pais: string, estado: string) {
+    marcaContagemCidades(pais: string, estado: string): Observable<any> {
         const url = `${this.marcaContagem}/${pais}/${estado}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
-    marcaContagemUFs(pais: string) {
+    marcaContagemUFs(pais: string): Observable<any> {
         const url = `${this.marcaContagem}/${pais}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
 
-    gastoContagemBairros(pais: string, estado: string, cidade: string) {
+    gastoContagemBairros(pais: string, estado: string, cidade: string): Observable<any> {
         const url = `${this.gastoContagem}/${pais}/${estado}/${cidade}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
-    gastoContagemCidades(pais: string, estado: string) {
+    gastoContagemCidades(pais: string, estado: string): Observable<any> {
         const url = `${this.gastoContagem}/${pais}/${estado}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
-    gastoContagemUFs(pais: string) {
+    gastoContagemUFs(pais: string): Observable<any> {
         const url = `${this.gastoContagem}/${pais}`;
-        return this.http.get(url);
+        return this.http.get(url).map((response: Response) => response);
     }
 
 }
