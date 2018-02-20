@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Http, Response } from '@angular/http';
 import { Observable, ObservableInput } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class MapIndexService {
@@ -8,9 +9,9 @@ export class MapIndexService {
     constructor(private http: HttpClient) { }
 
     public nameClicked: any;
-    private contagemPessoas = 'http://localhost:59228/api/geoseta/'; // pais , uf, cidade
-    private marcaContagem = 'http://localhost:59228/api/geoseta/marca/'; // passa pais, UF, cidade 
-    private gastoContagem = 'http://localhost:59228/api/geoseta/gasto/';
+    private contagemPessoas = 'http://localhost:59228/api/geoseta'; // pais , uf, cidade
+    private marcaContagem = 'http://localhost:59228/api/geoseta/marca'; // passa pais, UF, cidade 
+    private gastoContagem = 'http://localhost:59228/api/geoseta/gasto';
 
     getConfig() {
         var configUrl = 'assets/geojson/SETA.BR.json';
@@ -30,14 +31,16 @@ export class MapIndexService {
     contagemPessoaBairros(pais: string, estado: string, cidade: string) {
         const url = `${this.contagemPessoas}/${pais}/${estado}/${cidade}`;
         return this.http.get(url);
-    }
+    } 
     contagemPessoaCidades(pais: string, estado: string) {
         const url = `${this.contagemPessoas}/${pais}/${estado}`;
         return this.http.get(url);
     }
     contagemPessoaUFs(pais: string) {
         const url = `${this.contagemPessoas}/${pais}`;
-        return this.http.get(url);
+        console.log(url);
+        var a = this.http.get(url);
+        return  a;
     }
 
     marcaContagemBairros(pais: string, estado: string, cidade: string) {
