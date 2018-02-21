@@ -19,7 +19,18 @@ export class MapindexComponent implements OnInit {
 
     }
 
+    openNav() {
+        document.getElementById("myMenu").style.width = "50%";
+        document.getElementById("myMenu").style.marginTop = "21px";
+    }
+    
+    closeNav() {
+        document.getElementById("myMenu").style.width = "0";
+    }
+
     ngOnInit() {
+        
+        var levelDrilldown = 0;
         //melhorar a forma de armazenamento
         this.clienteService.contagemPessoaUFs('BR').subscribe((data: any) => {
             console.log(data);
@@ -57,8 +68,9 @@ export class MapindexComponent implements OnInit {
                             drilldown: function (e) {
                                 //TODO Carregar pelo banco as informações dos caras clicados.
                                 //e  jogar num objeto chamado Highcharts.maps;
-
+                              if(levelDrilldown < 2){
                                 _self.clienteService.getData(e.point.drilldown).subscribe(clienteResult => {
+                                    levelDrilldown++; //controla em que nivel o drilldown esta
                                     mapKey = e.point.drilldown;
                                     console.log(mapKey);
 
@@ -83,8 +95,8 @@ export class MapindexComponent implements OnInit {
 
 
                                         // Show the spinner
-                                        //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
-
+                                        chart.showLoading('<i class="icon-spinner icon-spin icon-large icon-css"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
+                                    
                                         // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
 
                                         //data = Highcharts.geojson(Highcharts.maps[mapKey]);
@@ -140,21 +152,24 @@ export class MapindexComponent implements OnInit {
                                                 format: '{point.name}'
                                             }
                                         });
+
+                                        this.setTitle(null, { text: e.point.name });
                                     }
 
                                 });
-
+                              }
                             },
                             drillup: function () {
+                                levelDrilldown--; //controla em que nivel o drilldown esta
                                 this.setTitle(null, { text: '' });
                             }
                         }
                     },
 
                     title: {
-                        text: 'SetaDigital, Exemplo DrillDown'
+                        text: 'SetaDigital - Mapa de Clientes'
                     },
-
+    
                     subtitle: {
                         text: '',
                         floating: true,
@@ -164,26 +179,20 @@ export class MapindexComponent implements OnInit {
                             fontSize: '16px'
                         }
                     },
-
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle'
-                    },
-
+    
                     colorAxis: {
                         min: 0,
                         minColor: '#E6E7E8',
                         maxColor: '#005645'
                     },
-
+    
                     mapNavigation: {
                         enabled: true,
                         buttonOptions: {
                             verticalAlign: 'bottom'
                         }
                     },
-
+    
                     plotOptions: {
                         map: {
                             states: {
@@ -193,7 +202,7 @@ export class MapindexComponent implements OnInit {
                             }
                         }
                     },
-
+    
                     series: [{
                         data: data,
                         name: 'Brasil',
@@ -201,8 +210,9 @@ export class MapindexComponent implements OnInit {
                             enabled: true,
                             format: '{point.properties.postal-code}'
                         }
+                         
                     }],
-
+    
                     drilldown: {
                         activeDataLabelStyle: {
                             color: '#FFFFFF',

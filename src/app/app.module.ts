@@ -49,6 +49,8 @@ import { MapindexComponent } from './mapindex/mapindex.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
 import { MapIndexService } from './mapindex/mapindex.service';
+import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
+import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { MapIndexService } from './mapindex/mapindex.service';
     MapComponent,
     MessageComponent,
     HighmapComponent,
-    MapindexComponent
+    MapindexComponent,
+    MapamarcasComponent
   ],
   entryComponents: [
     MessageComponent
@@ -109,7 +112,7 @@ import { MapIndexService } from './mapindex/mapindex.service';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapIndexService],
+  providers: [MapIndexService, MapamarcasService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

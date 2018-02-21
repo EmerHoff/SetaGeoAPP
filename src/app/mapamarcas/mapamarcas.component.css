@@ -1,7 +1,7 @@
 #container {
     height: 500px; 
     min-width: 310px; 
-    max-width: 800px; 
+    max-width: 600px; 
     margin: 0 auto; 
 }
 .loading {
@@ -210,6 +210,7 @@ z-index: 1;
     text-align: center;
     color: gray;
 }
+
 .icon-css {
     color: #474747;
     size: 50px;
