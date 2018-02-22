@@ -46,9 +46,13 @@ import {
 } from '@angular/material';
 import { HighmapComponent } from './highmap/highmap.component';
 import { MapindexComponent } from './mapindex/mapindex.component';
+import { MapgastoComponent } from './mapgasto/mapgasto.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
 import { MapIndexService } from './mapindex/mapindex.service';
+import { MapGastoService } from './mapgasto/mapgasto.service';
+import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
+import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 
 @NgModule({
   declarations: [
@@ -56,7 +60,9 @@ import { MapIndexService } from './mapindex/mapindex.service';
     MapComponent,
     MessageComponent,
     HighmapComponent,
-    MapindexComponent
+    MapindexComponent,
+    MapgastoComponent,
+    MapamarcasComponent
   ],
   entryComponents: [
     MessageComponent
@@ -109,7 +115,7 @@ import { MapIndexService } from './mapindex/mapindex.service';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapIndexService],
+  providers: [MapIndexService, MapamarcasService, MapGastoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

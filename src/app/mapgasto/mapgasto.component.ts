@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Console } from '@angular/core/src/console';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MapIndexService } from './mapindex.service';
+import { MapGastoService } from './mapgasto.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
@@ -9,16 +9,16 @@ import 'rxjs/Rx';
 declare var Highcharts: any;
 
 @Component({
-    selector: 'app-mapindex',
-    templateUrl: './mapindex.component.html',
-    styleUrls: ['./mapindex.component.css']
+    selector: 'app-mapgasto',
+    templateUrl: './mapgasto.component.html',
+    styleUrls: ['./mapgasto.component.css']
 })
-export class MapindexComponent implements OnInit {
+export class MapgastoComponent implements OnInit {
 
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapIndexService) {
+    constructor(private clienteService: MapGastoService) {
 
     }
 
@@ -31,16 +31,16 @@ export class MapindexComponent implements OnInit {
         document.getElementById("myMenu").style.width = "0";
     }
 
-    ngOnInit() {
-        //melhorar a forma de armazenamento
+    ngOnInit(){
         var _self2 = this;
         Observable.forkJoin(
-            this.clienteService.contagemPessoaUFs('BR'),
+            this.clienteService.gastoContagemUFs('BR'),
             this.clienteService.getConfig()
         ).subscribe(([res0, res1]) => {
             //console.log("Resultados do forkjoin");
             Highcharts.maps["SETA.BR"] = res1;
-            //console.log(res1)
+            //console.log(res0);
+
             this.values = JSON.parse(res0.toString());
             //console.log(this.values);
 
@@ -80,7 +80,7 @@ export class MapindexComponent implements OnInit {
                                 //console.log(estado);
                                 Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
                                     _self.clienteService.getData(e.point.drilldown),
-                                    _self.clienteService.requisicaoContagem(mapKey)
+                                    _self.clienteService.requisicaoGasto(mapKey)
                                 ).subscribe(([res0, res1]) => {
                                     mapKey = e.point.drilldown;
                                     _self.json = res0;
@@ -161,7 +161,7 @@ export class MapindexComponent implements OnInit {
                             }
                             else {
 
-                                _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
+                                _self.clienteService.requisicaoGasto(mapKey).subscribe((res1) => {
                                     _self.values = JSON.parse(res1.toString());
                                     //data = Highcharts.geojson(Highcharts.maps[estado]);
                                     if (!e.seriesOptions) {
@@ -243,7 +243,7 @@ export class MapindexComponent implements OnInit {
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de clientes'
+                    text: 'SetaDigital - Mapa de gastos dos clientes'
                 },
 
                 subtitle: {
@@ -310,8 +310,6 @@ export class MapindexComponent implements OnInit {
                 }
             });
         });
-    };
-
-    
+    }
 
 }
