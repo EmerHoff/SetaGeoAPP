@@ -119,9 +119,9 @@ export class MapIndexService {
     //     const url = `${this.gastoContagem}/${pais}/${estado}`;
     //     return this.http.get(url).map((response: Response) => response);
     // }
-    // gastoContagemUFs(pais: string): Observable<any> {
-    //     const url = `${this.gastoContagem}/${pais}`;
-    //     return this.http.get(url).map((response: Response) => response);
-    // }
+    gastoContagemUFs(pais: string): Observable<any> {
+        const url = `${this.gastoContagem}/${pais}`;
+        return this.http.get(url).map((response: Response) => response);
+    }
 
 }
