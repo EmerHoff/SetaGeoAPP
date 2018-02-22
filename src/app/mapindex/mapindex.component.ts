@@ -65,17 +65,22 @@ export class MapindexComponent implements OnInit {
             // });
 
             // Instantiate the map
-
+            //var secondclick=false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
                             //TODO Carregar pelo banco as informações dos caras clicados.
                             //e  jogar num objeto chamado Highcharts.maps;
+                            //console.log(secondclick);
                             var estado = e.point.drilldown;
                             var mapKey = e.point.drilldown;
+                            //if(secondclick==false)
+                            //{
+                            //    var anterior = mapKey;
+                            //}
                             estado = estado.replace("SETA.BR.", "");
-                            if (Highcharts.maps[mapKey] == null) {
+                            if ((Highcharts.maps[mapKey] == null)){//&&(secondclick==true)) {
 
                                 //console.log(estado);
                                 Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
@@ -159,8 +164,8 @@ export class MapindexComponent implements OnInit {
                                 });
 
                             }
-                            else {
-
+                            else {//if(secondclick==true){
+                                console.log("Passou aqui");
                                 _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
                                     _self.values = JSON.parse(res1.toString());
                                     //data = Highcharts.geojson(Highcharts.maps[estado]);
@@ -234,6 +239,11 @@ export class MapindexComponent implements OnInit {
                                     }
                                 })
                             }
+                            //secondclick=true;
+                            //if(mapKey!=anterior){
+                            //    secondclick=false;
+                            //}
+                            
 
                         },
                         drillup: function () {
