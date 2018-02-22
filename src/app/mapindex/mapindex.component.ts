@@ -69,9 +69,9 @@ export class MapindexComponent implements OnInit {
                             if (Highcharts.maps[mapKey] == null) {
 
                                 console.log(estado);
-                                Observable.forkJoin(
+                                Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
                                     _self.clienteService.getData(e.point.drilldown),
-                                    _self.clienteService.contagemPessoaCidades('BR', estado)
+                                    _self.clienteService.requisicaoContagem(mapKey)
                                 ).subscribe(([res0, res1]) => {
                                     mapKey = e.point.drilldown;
                                     _self.json = res0;
@@ -152,7 +152,7 @@ export class MapindexComponent implements OnInit {
                             }
                             else {
 
-                                _self.clienteService.contagemPessoaCidades('BR', estado).subscribe((res1) => {
+                                _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
                                     _self.values = JSON.parse(res1.toString());
                                     //data = Highcharts.geojson(Highcharts.maps[estado]);
                                     if (!e.seriesOptions) {

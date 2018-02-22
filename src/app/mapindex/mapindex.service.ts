@@ -20,7 +20,13 @@ export class MapIndexService {
     }
 
     getData(nameClicked) {
-        var dataUrl = 'assets/geojson/' + nameClicked + '.json';
+        var array = nameClicked.split(".");
+        if(array.length == 3){
+            var dataUrl = 'assets/geojson/' + nameClicked + '.json';
+        }
+        else if(array.length == 4){
+            var dataUrl = 'assets/geojson/' + array[2] + '/' + nameClicked + '.json';
+        }
         return this.http.get(dataUrl);
     }
 
@@ -29,20 +35,65 @@ export class MapIndexService {
         return this.http.get(configUrl);
     }
 
-    contagemPessoaBairros(pais: string, estado: string, cidade: string): Observable<any> {
-        const url = `${this.contagemPessoas}/${pais}/${estado}/${cidade}`;
-        return this.http.get(url).map((response: Response) => response);
-    } 
-    contagemPessoaCidades(pais: string, estado: string): Observable<any> {
-        const url = `${this.contagemPessoas}/${pais}/${estado}`;
-        return this.http.get(url).map((response: Response) => response);
+    requisicaoContagem(input: string): Observable<any>{
+        //SETA.BR.PR.CASCAVEL.CENTRO
+        var array = input.split(".");
+        var cont=0;
+        for(var i=0; i<array.length;i++){
+            cont++;
+        }
+        if(array.length==2){
+            const url = `${this.contagemPessoas}/${array[1]}`;
+            return  this.http.get(url).map((response: Response) => response);
+        }
+        else if(array.length==3){
+            
+            const url = `${this.contagemPessoas}/${array[1]}/${array[2]}`;
+            return this.http.get(url).map((response: Response) => response);
+            
+        }
+        else if(array.length==4){
+            
+            const url = `${this.contagemPessoas}/${array[1]}/${array[2]}/${array[3]}`;
+            return this.http.get(url).map((response: Response) => response);
+        }
+
     }
+    requisicaoGasto(input: string): Observable<any>{
+        //SETA.BR.PR.CASCAVEL.CENTRO
+        var array = input.split(".");
+        var cont=0;
+        for(var i=0; i<array.length;i++){
+            cont++;
+        }
+        if(array.length==2){
+            const url = `${this.gastoContagem}/${array[1]}`;
+            return  this.http.get(url).map((response: Response) => response);
+        }
+        else if(array.length==3){
+            
+            const url = `${this.gastoContagem}/${array[1]}/${array[2]}`;
+            return this.http.get(url).map((response: Response) => response);
+            
+        }
+        else if(array.length==4){
+            
+            const url = `${this.gastoContagem}/${array[1]}/${array[2]}/${array[3]}`;
+            return this.http.get(url).map((response: Response) => response);
+        }
+
+    }
+
+    // contagemPessoaBairros(pais: string, estado: string, cidade: string): Observable<any> {
+    //     const url = `${this.contagemPessoas}/${pais}/${estado}/${cidade}`;
+    //     return this.http.get(url).map((response: Response) => response);
+    // } 
+    // contagemPessoaCidades(pais: string, estado: string): Observable<any> {
+    //     const url = `${this.contagemPessoas}/${pais}/${estado}`;
+    //     return this.http.get(url).map((response: Response) => response);
+    // }
     contagemPessoaUFs(pais: string): Observable<any> {
         const url = `${this.contagemPessoas}/${pais}`;
-        console.log(url);
-        // var a = this.http.get(url).subscribe(json => {
-        //     console.log(json);
-        // });
         return  this.http.get(url).map((response: Response) => response);
         
     }
@@ -60,17 +111,17 @@ export class MapIndexService {
         return this.http.get(url).map((response: Response) => response);
     }
 
-    gastoContagemBairros(pais: string, estado: string, cidade: string): Observable<any> {
-        const url = `${this.gastoContagem}/${pais}/${estado}/${cidade}`;
-        return this.http.get(url).map((response: Response) => response);
-    }
-    gastoContagemCidades(pais: string, estado: string): Observable<any> {
-        const url = `${this.gastoContagem}/${pais}/${estado}`;
-        return this.http.get(url).map((response: Response) => response);
-    }
-    gastoContagemUFs(pais: string): Observable<any> {
-        const url = `${this.gastoContagem}/${pais}`;
-        return this.http.get(url).map((response: Response) => response);
-    }
+    // gastoContagemBairros(pais: string, estado: string, cidade: string): Observable<any> {
+    //     const url = `${this.gastoContagem}/${pais}/${estado}/${cidade}`;
+    //     return this.http.get(url).map((response: Response) => response);
+    // }
+    // gastoContagemCidades(pais: string, estado: string): Observable<any> {
+    //     const url = `${this.gastoContagem}/${pais}/${estado}`;
+    //     return this.http.get(url).map((response: Response) => response);
+    // }
+    // gastoContagemUFs(pais: string): Observable<any> {
+    //     const url = `${this.gastoContagem}/${pais}`;
+    //     return this.http.get(url).map((response: Response) => response);
+    // }
 
 }
