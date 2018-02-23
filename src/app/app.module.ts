@@ -53,6 +53,7 @@ import { MapIndexService } from './mapindex/mapindex.service';
 import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
 
 @NgModule({
   declarations: [
@@ -62,10 +63,12 @@ import { MapamarcasService } from './mapamarcas/mapamarcas.service';
     HighmapComponent,
     MapindexComponent,
     MapgastoComponent,
-    MapamarcasComponent
+    MapamarcasComponent,
+    SnackbarmessageComponent
   ],
   entryComponents: [
-    MessageComponent
+    MessageComponent,
+    SnackbarmessageComponent
   ],
   imports: [
     BrowserModule,

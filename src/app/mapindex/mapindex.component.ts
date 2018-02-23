@@ -5,8 +5,11 @@ import { MapIndexService } from './mapindex.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
+import {SnackbarmessageComponent} from '../snackbarmessage/snackbarmessage.component';
+import { MatSnackBar } from '@angular/material';
 
 declare var Highcharts: any;
+var mensagem: string;
 
 @Component({
     selector: 'app-mapindex',
@@ -18,7 +21,7 @@ export class MapindexComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapIndexService) {
+    constructor(private clienteService: MapIndexService, public snackBar: MatSnackBar) {
 
     }
 
@@ -65,22 +68,22 @@ export class MapindexComponent implements OnInit {
             // });
 
             // Instantiate the map
-            //var secondclick=false;
+            var secondclick=false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
                             //TODO Carregar pelo banco as informações dos caras clicados.
                             //e  jogar num objeto chamado Highcharts.maps;
-                            //console.log(secondclick);
+                            console.log(secondclick);
                             var estado = e.point.drilldown;
                             var mapKey = e.point.drilldown;
-                            //if(secondclick==false)
-                            //{
-                            //    var anterior = mapKey;
-                            //}
+                            if(secondclick==false)
+                            {
+                                var anterior = mapKey;
+                            }
                             estado = estado.replace("SETA.BR.", "");
-                            if ((Highcharts.maps[mapKey] == null)){//&&(secondclick==true)) {
+                            if ((Highcharts.maps[mapKey] == null)&&(secondclick==true)) {
 
                                 //console.log(estado);
                                 Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
@@ -164,7 +167,7 @@ export class MapindexComponent implements OnInit {
                                 });
 
                             }
-                            else {//if(secondclick==true){
+                            else if(secondclick==true){
                                 console.log("Passou aqui");
                                 _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
                                     _self.values = JSON.parse(res1.toString());
@@ -239,10 +242,10 @@ export class MapindexComponent implements OnInit {
                                     }
                                 })
                             }
-                            //secondclick=true;
-                            //if(mapKey!=anterior){
-                            //    secondclick=false;
-                            //}
+                            secondclick=true;
+                            if(mapKey!=anterior){
+                                secondclick=false;
+                            }
                             
 
                         },
@@ -255,7 +258,19 @@ export class MapindexComponent implements OnInit {
                 title: {
                     text: 'SetaDigital - Mapa de clientes'
                 },
-
+                exporting: {
+                    buttons: {
+                        customButton: {
+                            text: 'Gerar relatorio',
+                            floating: true,
+                            verticalAlign: 'bottom',
+                            align: 'right',
+                            onclick: function () {
+                                _self.openSnackBar("","Fechar");
+                            }
+                        }
+                    }
+                },
                 subtitle: {
                     text: '',
                     floating: true,
@@ -267,9 +282,9 @@ export class MapindexComponent implements OnInit {
                 },
 
                 legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
                 },
 
                 colorAxis: {
@@ -318,10 +333,17 @@ export class MapindexComponent implements OnInit {
                         }
                     }
                 }
+                
             });
         });
     };
 
+    openSnackBar(message: string, action: string) {
+        mensagem = message;
+        this.snackBar.openFromComponent(SnackbarmessageComponent);
+        //this.snackBar.open(message, action, {
+          
     
-
-}
+        //});
+      }
+    }
