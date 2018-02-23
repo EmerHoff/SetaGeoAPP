@@ -53,6 +53,7 @@ import { MapIndexService } from './mapindex/mapindex.service';
 import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MapamarcasService } from './mapamarcas/mapamarcas.service';
     HighmapComponent,
     MapindexComponent,
     MapgastoComponent,
-    MapamarcasComponent
+    MapamarcasComponent,
+    GeradorPdfComponent
   ],
   entryComponents: [
     MessageComponent

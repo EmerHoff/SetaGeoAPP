@@ -89,6 +89,8 @@ export class MapindexComponent implements OnInit {
                                 ).subscribe(([res0, res1]) => {
                                     mapKey = e.point.drilldown;
                                     _self.json = res0;
+                                    var a = res1.toString().replace("\\","");
+                                    
                                     _self.values = JSON.parse(res1.toString());
                                     Highcharts.maps[mapKey] = res0;
 
