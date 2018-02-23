@@ -19,7 +19,7 @@ export class MapIndexService {
         return this.http.get(configUrl);
     }
 
-    getData(nameClicked) {
+    getShape(nameClicked) {
         var array = nameClicked.split(".");
         if(array.length == 3){
             var dataUrl = 'assets/geojson/' + nameClicked + '.json';
