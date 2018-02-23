@@ -54,6 +54,7 @@ import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
+import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
 
 @NgModule({
   declarations: [
@@ -64,10 +65,12 @@ import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
     MapindexComponent,
     MapgastoComponent,
     MapamarcasComponent,
-    GeradorPdfComponent
+    GeradorPdfComponent,
+    SnackbarmessageComponent
   ],
   entryComponents: [
-    MessageComponent
+    MessageComponent,
+    SnackbarmessageComponent
   ],
   imports: [
     BrowserModule,

@@ -5,8 +5,11 @@ import { MapIndexService } from './mapindex.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
+import {SnackbarmessageComponent} from '../snackbarmessage/snackbarmessage.component';
+import { MatSnackBar } from '@angular/material';
 
 declare var Highcharts: any;
+var mensagem: string;
 
 @Component({
     selector: 'app-mapindex',
@@ -18,7 +21,7 @@ export class MapindexComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapIndexService) {
+    constructor(private clienteService: MapIndexService, public snackBar: MatSnackBar) {
 
     }
 
@@ -33,6 +36,7 @@ export class MapindexComponent implements OnInit {
 
     ngOnInit() {
         //melhorar a forma de armazenamento
+        var levelDrilldown = 0;
         var _self2 = this;
         Observable.forkJoin(
             this.clienteService.contagemPessoaUFs('BR'),
@@ -65,199 +69,203 @@ export class MapindexComponent implements OnInit {
             // });
 
             // Instantiate the map
-            //var secondclick=false;
+            var secondclick=false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
                             //TODO Carregar pelo banco as informações dos caras clicados.
                             //e  jogar num objeto chamado Highcharts.maps;
-                            //console.log(secondclick);
-                            var estado = e.point.drilldown;
-                            var mapKey = e.point.drilldown;
-                            //if(secondclick==false)
-                            //{
-                            //    var anterior = mapKey;
-                            //}
-                            estado = estado.replace("SETA.BR.", "");
-                            if ((Highcharts.maps[mapKey] == null)){//&&(secondclick==true)) {
+                            if(levelDrilldown < 2){
+                                levelDrilldown++; //controla em que nivel o drilldown esta
+                                var estado = e.point.drilldown;
+                                var mapKey = e.point.drilldown;
+                                estado = estado.replace("SETA.BR.", "");
+                                if (Highcharts.maps[mapKey] == null) {
 
-                                //console.log(estado);
-                                Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
-                                    _self.clienteService.getData(e.point.drilldown),
-                                    _self.clienteService.requisicaoContagem(mapKey)
-                                ).subscribe(([res0, res1]) => {
-                                    mapKey = e.point.drilldown;
-                                    _self.json = res0;
-                                    var a = res1.toString().replace("\\","");
-                                    
-                                    _self.values = JSON.parse(res1.toString());
-                                    Highcharts.maps[mapKey] = res0;
-
-                                    data = Highcharts.geojson(Highcharts.maps[mapKey]);
-                                    if (!e.seriesOptions) {
-                                        var chart = this,
-                                            mapKey = e.point.drilldown,
-                                            //modificar o icon de loading futuramente
-                                            fail = setTimeout(function () {
-                                                if (!Highcharts.maps[mapKey]) {
-                                                    chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-                                                    fail = setTimeout(function () {
-                                                        chart.hideLoading();
-                                                    }, 1000);
-                                                }
-                                            }, 3000);
-
-
-                                        // Show the spinner
-                                        //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
-
-                                        // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
-
-                                        //data = Highcharts.geojson(Highcharts.maps[mapKey]);
-                                        data.forEach(function (i) {
-                                            i.drilldown = i.properties['hc-key'];
-                                            var value = _self.values[i.properties['hc-key']];
-                                            if (value != undefined) {
-                                                i.value = value;
-                                            } else {
-                                                i.value = 0;
-                                            }
-                                            //TODO no terceiro nivel não pode existir mais drilldown.
-                                        });
-
-
-                                        var count = 0;
-                                        var _newself = _self;
-                                        //console.log(_self.dados[count].value);
-
-                                        // data.forEach(function (i) {
-                                        //     //var value = _self.values[i.properties['hc-key']];
-                                        //     if(count <= 45){
-                                        //         i.value = _newself.dados[count].value;
-                                        //     }
-                                        //     else {
-                                        //         i.value = 100;
-                                        //     }
-
-                                        //     //console.log(i.value);  
-                                        //     /*if (value != undefined) {
-                                        //         i.value = value;
-                                        //     } else {
-                                        //         i.value = 0;
-                                        //     }*/
-                                        //     //TODO no terceiro nivel não pode existir mais drilldown.
-                                        //     i.drilldown = i.properties['hc-key'];
-                                        //     count++;
-                                        // });
-
-                                        // Hide loading and add series
-                                        chart.hideLoading();
-                                        clearTimeout(fail);
-                                        chart.addSeriesAsDrilldown(e.point, {
-                                            name: e.point.name,
-                                            data: data,
-                                            dataLabels: {
-                                                enabled: false,
-                                                format: '{point.name}'
-                                            }
-                                        });
-                                    }
-                                });
-
-                            }
-                            else {//if(secondclick==true){
-                                console.log("Passou aqui");
-                                _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
-                                    _self.values = JSON.parse(res1.toString());
-                                    //data = Highcharts.geojson(Highcharts.maps[estado]);
-                                    if (!e.seriesOptions) {
-                                        var chart = this,
-                                            mapKey = e.point.drilldown,
-                                            //modificar o icon de loading futuramente
-                                            fail = setTimeout(function () {
-                                                if (!Highcharts.maps[mapKey]) {
-                                                    chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-                                                    fail = setTimeout(function () {
-                                                        chart.hideLoading();
-                                                    }, 1000);
-                                                }
-                                            }, 3000);
-
-
-                                        // Show the spinner
-                                        //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
-
-                                        // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
+                                    //console.log(estado);
+                                    Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
+                                        _self.clienteService.getShape(e.point.drilldown),
+                                        _self.clienteService.requisicaoContagem(mapKey)
+                                    ).subscribe(([res0, res1]) => {
+                                        mapKey = e.point.drilldown;
+                                        _self.json = res0;
+                                        _self.values = JSON.parse(res1.toString());
+                                        Highcharts.maps[mapKey] = res0;
 
                                         data = Highcharts.geojson(Highcharts.maps[mapKey]);
-                                        data.forEach(function (i) {
-                                            i.drilldown = i.properties['hc-key'];
-                                            var value = _self.values[i.properties['hc-key']];
-                                            if (value != undefined) {
-                                                i.value = value;
-                                            } else {
-                                                i.value = 0;
-                                            }
-                                            //TODO no terceiro nivel não pode existir mais drilldown.
-                                        });
+                                        if (!e.seriesOptions) {
+                                            var chart = this,
+                                                mapKey = e.point.drilldown,
+                                                //modificar o icon de loading futuramente
+                                                fail = setTimeout(function () {
+                                                    if (!Highcharts.maps[mapKey]) {
+                                                        chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                                                        fail = setTimeout(function () {
+                                                            chart.hideLoading();
+                                                        }, 1000);
+                                                    }
+                                                }, 3000);
 
 
-                                        var count = 0;
-                                        var _newself = _self;
-                                        //console.log(_self.dados[count].value);
+                                            // Show the spinner
+                                            //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
 
-                                        // data.forEach(function (i) {
-                                        //     //var value = _self.values[i.properties['hc-key']];
-                                        //     if(count <= 45){
-                                        //         i.value = _newself.dados[count].value;
-                                        //     }
-                                        //     else {
-                                        //         i.value = 100;
-                                        //     }
+                                            // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
 
-                                        //     //console.log(i.value);  
-                                        //     /*if (value != undefined) {
-                                        //         i.value = value;
-                                        //     } else {
-                                        //         i.value = 0;
-                                        //     }*/
-                                        //     //TODO no terceiro nivel não pode existir mais drilldown.
-                                        //     i.drilldown = i.properties['hc-key'];
-                                        //     count++;
-                                        // });
+                                            //data = Highcharts.geojson(Highcharts.maps[mapKey]);
+                                            data.forEach(function (i) {
+                                                i.drilldown = i.properties['hc-key'];
+                                                var value = _self.values[i.properties['hc-key']];
+                                                if (value != undefined) {
+                                                    i.value = value;
+                                                } else {
+                                                    i.value = 0;
+                                                }
+                                                //TODO no terceiro nivel não pode existir mais drilldown.
+                                            });
 
-                                        // Hide loading and add series
-                                        chart.hideLoading();
-                                        clearTimeout(fail);
-                                        chart.addSeriesAsDrilldown(e.point, {
-                                            name: e.point.name,
-                                            data: data,
-                                            dataLabels: {
-                                                enabled: false,
-                                                format: '{point.name}'
-                                            }
-                                        });
-                                    }
-                                })
+
+                                            var count = 0;
+                                            var _newself = _self;
+                                            //console.log(_self.dados[count].value);
+
+                                            // data.forEach(function (i) {
+                                            //     //var value = _self.values[i.properties['hc-key']];
+                                            //     if(count <= 45){
+                                            //         i.value = _newself.dados[count].value;
+                                            //     }
+                                            //     else {
+                                            //         i.value = 100;
+                                            //     }
+
+                                            //     //console.log(i.value);  
+                                            //     /*if (value != undefined) {
+                                            //         i.value = value;
+                                            //     } else {
+                                            //         i.value = 0;
+                                            //     }*/
+                                            //     //TODO no terceiro nivel não pode existir mais drilldown.
+                                            //     i.drilldown = i.properties['hc-key'];
+                                            //     count++;
+                                            // });
+
+                                            // Hide loading and add series
+                                            chart.hideLoading();
+                                            clearTimeout(fail);
+                                            chart.addSeriesAsDrilldown(e.point, {
+                                                name: e.point.name,
+                                                data: data,
+                                                dataLabels: {
+                                                    enabled: false,
+                                                    format: '{point.name}'
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                }
+                                else {
+
+                                    _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
+                                        _self.values = JSON.parse(res1.toString());
+                                        //data = Highcharts.geojson(Highcharts.maps[estado]);
+                                        if (!e.seriesOptions) {
+                                            var chart = this,
+                                                mapKey = e.point.drilldown,
+                                                //modificar o icon de loading futuramente
+                                                fail = setTimeout(function () {
+                                                    if (!Highcharts.maps[mapKey]) {
+                                                        chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                                                        fail = setTimeout(function () {
+                                                            chart.hideLoading();
+                                                        }, 1000);
+                                                    }
+                                                }, 3000);
+
+
+                                            // Show the spinner
+                                            //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
+
+                                            // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
+
+                                            data = Highcharts.geojson(Highcharts.maps[mapKey]);
+                                            data.forEach(function (i) {
+                                                i.drilldown = i.properties['hc-key'];
+                                                var value = _self.values[i.properties['hc-key']];
+                                                if (value != undefined) {
+                                                    i.value = value;
+                                                } else {
+                                                    i.value = 0;
+                                                }
+                                                //TODO no terceiro nivel não pode existir mais drilldown.
+                                            });
+
+
+                                            var count = 0;
+                                            var _newself = _self;
+                                            //console.log(_self.dados[count].value);
+
+                                            // data.forEach(function (i) {
+                                            //     //var value = _self.values[i.properties['hc-key']];
+                                            //     if(count <= 45){
+                                            //         i.value = _newself.dados[count].value;
+                                            //     }
+                                            //     else {
+                                            //         i.value = 100;
+                                            //     }
+
+                                            //     //console.log(i.value);  
+                                            //     /*if (value != undefined) {
+                                            //         i.value = value;
+                                            //     } else {
+                                            //         i.value = 0;
+                                            //     }*/
+                                            //     //TODO no terceiro nivel não pode existir mais drilldown.
+                                            //     i.drilldown = i.properties['hc-key'];
+                                            //     count++;
+                                            // });
+
+                                            // Hide loading and add series
+                                            chart.hideLoading();
+                                            clearTimeout(fail);
+                                            chart.addSeriesAsDrilldown(e.point, {
+                                                name: e.point.name,
+                                                data: data,
+                                                dataLabels: {
+                                                    enabled: false,
+                                                    format: '{point.name}'
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                             }
-                            //secondclick=true;
-                            //if(mapKey!=anterior){
-                            //    secondclick=false;
-                            //}
-                            
-
                         },
                         drillup: function () {
                             this.setTitle(null, { text: '' });
+                            levelDrilldown--; //controla em que nivel o drilldown esta
                         }
+                        
                     }
                 },
 
                 title: {
                     text: 'SetaDigital - Mapa de clientes'
                 },
-
+                exporting: {
+                    buttons: {
+                        customButton: {
+                            text: 'Gerar relatorio',
+                            floating: true,
+                            verticalAlign: 'bottom',
+                            align: 'right',
+                            onclick: function () {
+                                _self.openSnackBar("","Fechar");
+                            }
+                        }
+                    }
+                },
                 subtitle: {
                     text: '',
                     floating: true,
@@ -266,12 +274,6 @@ export class MapindexComponent implements OnInit {
                     style: {
                         fontSize: '16px'
                     }
-                },
-
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
                 },
 
                 colorAxis: {
@@ -320,10 +322,17 @@ export class MapindexComponent implements OnInit {
                         }
                     }
                 }
+                
             });
         });
     };
 
+    openSnackBar(message: string, action: string) {
+        mensagem = message;
+        this.snackBar.openFromComponent(SnackbarmessageComponent);
+        //this.snackBar.open(message, action, {
+          
     
-
-}
+        //});
+      }
+    }

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Console } from '@angular/core/src/console';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MapamarcasService } from './mapamarcas.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/Rx';
 
 declare var Highcharts: any;
 
@@ -34,15 +37,25 @@ export class MapamarcasComponent implements OnInit {
     ngOnInit() {
 
         var levelDrilldown = 0;
+        var _self2 = this;
+        Observable.forkJoin(
+            this.clienteService.contagemPessoaUFs('BR'),
+            this.clienteService.getConfig()
+        ).subscribe(([res0, res1]) => {
+            //console.log("Resultados do forkjoin");
+            Highcharts.maps["SETA.BR"] = res1;
+            //console.log(res1)
+            this.values = JSON.parse(res0.toString());
+            //console.log(this.values);
 
-        this.clienteService.getShape('SETA.BR').subscribe(clienteResult => {
-            this.json = clienteResult;
-            Highcharts.maps["SETA.BR"] = clienteResult;
-
-            //puxa o primeiro mapa principal, que é "SETA.BR"
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
+            var _self = _self2;
 
-            console.log(shape);
+            var _self = this;
+
+            shape.forEach(function (i) {
+                i.drilldown = i.properties['hc-key'];
+            });
 
             Highcharts.seriesType('mappie', {
                 center: null, // Can't be array by default anymore
@@ -89,6 +102,7 @@ export class MapamarcasComponent implements OnInit {
                 ['Ceará', 462127, 678284, 14411, 3595, 100, 1158417, 0],
                 ['Distrito Federal', 1054889, 1585753, 96404, 25086, 100, 2762132, 3],
                 ['Paraíba', 174281, 273879, 28036, 7868, 100, 484064, 4],
+                ['CASCAVEL', 174281, 273879, 28036, 7868, 100, 484064, 4],
             ],
             maxVotes = 0,
             corMarca1 = 'rgba(74, 131, 240, 0.9)',
@@ -97,81 +111,174 @@ export class MapamarcasComponent implements OnInit {
             corMarca4 = 'rgba(90,200,90, 0.9)',
             corMarca5 = 'rgba(40,70,50, 0.9)';
 
-            console.log(dados);
+            //console.log(dados);
 
             
             var mapKey;
             var _self = this;
             var count = 0;
-            // Build the chart
+            
             var chart = Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
-                            console.log('entrou no drill');
-                            if(levelDrilldown < 2) {
-                                _self.clienteService.getShape(e.point.drilldown).subscribe(clienteResult => {
-                                    levelDrilldown++;
-                                    mapKey = e.point.drilldown;
-                                    console.log(mapKey);
+                            //TODO Carregar pelo banco as informações dos caras clicados.
+                            //e  jogar num objeto chamado Highcharts.maps;
+                            if(levelDrilldown < 2){
+                                levelDrilldown++; //controla em que nivel o drilldown esta
+                                var estado = e.point.drilldown;
+                                var mapKey = e.point.drilldown;
+                                estado = estado.replace("SETA.BR.", "");
+                                if (Highcharts.maps[mapKey] == null) {
 
-                                    this.json = clienteResult;
-                                    Highcharts.maps[mapKey] = clienteResult;
+                                    //console.log(estado);
+                                    Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
+                                        _self.clienteService.getShape(e.point.drilldown),
+                                        _self.clienteService.requisicaoContagem(mapKey)
+                                    ).subscribe(([res0, res1]) => {
+                                        mapKey = e.point.drilldown;
+                                        _self.json = res0;
+                                        _self.values = JSON.parse(res1.toString());
+                                        Highcharts.maps[mapKey] = res0;
 
-                                    shape = Highcharts.geojson(Highcharts.maps[mapKey]);
-
-                                    if (!e.seriesOptions) {
-                                        var chart = this,
-                                        mapKey = e.point.drilldown,
-                                        //modificar o icon de loading futuramente
-                                        fail = setTimeout(function () {
-                                            if (!Highcharts.maps[mapKey]) {
-                                                chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-                                                fail = setTimeout(function () {
-                                                    chart.hideLoading();
-                                                }, 1000);
-                                            }
-                                        }, 3000);
-
-                                        chart.showLoading('<i class="icon-spinner icon-spin icon-large icon-css"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
+                                        shape = Highcharts.geojson(Highcharts.maps[mapKey]);
                                         
-                                        /*shape.forEach(function (i) {
-                                            var value = _self.values[i.properties['hc-key']];
-                                            console.log(value);
-                                            if (value != undefined) {
-                                                i.value = value;
-                                            } else {
-                                                i.value = 0;
-                                            }
-                                            //TODO no terceiro nivel não pode existir mais drilldown.
-                                            i.drilldown = i.properties['hc-key'];
-                                            count++;
-                                        });*/
+                                        mapKey = e.point.drilldown;
+                                        console.log(mapKey);
 
-                                        chart.hideLoading();
-                                        clearTimeout(fail);
-                                        chart.addSeriesAsDrilldown(e.point, {
-                                            name: e.point.name,
-                                            data: shape,
-                                            dataLabels: {
-                                                enabled: false,
-                                                format: '{point.name}'
-                                            }
-                                        });
+                                        if (!e.seriesOptions) {
+                                            var chart = this,
+                                            mapKey = e.point.drilldown,
+                                            //modificar o icon de loading futuramente
+                                            fail = setTimeout(function () {
+                                                if (!Highcharts.maps[mapKey]) {
+                                                    chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                                                    fail = setTimeout(function () {
+                                                        chart.hideLoading();
+                                                    }, 1000);
+                                                }
+                                            }, 3000);
 
-                                        this.setTitle(null, { text: e.point.name });
-                                    }
-                                });
+                                            chart.showLoading('<i class="icon-spinner icon-spin icon-large icon-css"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
+                                            var count = 1;
+                                            shape.forEach(function (i) {
+                                                /*var value = _self.dados[i.properties['name']][6];
+                                                console.log(value);
+                                                if (value != undefined) {
+                                                    i.value = value;
+                                                } else {
+                                                    i.value = 0;
+                                                }
+                                                //TODO no terceiro nivel não pode existir mais drilldown.*/
+                                                i.drilldown = i.properties['hc-key'];
+                                                count++;
+
+                                                
+                                            });
+                                            chart.hideLoading();
+                                            clearTimeout(fail);
+                                            //console.log(dados);
+                                            chart.addSeriesAsDrilldown(e.point, {                                            
+                                                name: e.point.name,
+                                                data: shape,
+                                                dataLabels: {
+                                                    enabled: false,
+                                                    format: '{point.properties.postal-code}'
+                                                }
+                                            });
+                                            this.setTitle(null, { text: e.point.name });
+                                        }
+
+                                        
+
+                                    });
+
+                                }
+                                else {
+
+                                    _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
+                                        _self.values = JSON.parse(res1.toString());
+                                        //data = Highcharts.geojson(Highcharts.maps[estado]);
+                                        if (!e.seriesOptions) {
+                                            var chart = this,
+                                                mapKey = e.point.drilldown,
+                                                //modificar o icon de loading futuramente
+                                                fail = setTimeout(function () {
+                                                    if (!Highcharts.maps[mapKey]) {
+                                                        chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                                                        fail = setTimeout(function () {
+                                                            chart.hideLoading();
+                                                        }, 1000);
+                                                    }
+                                                }, 3000);
+
+
+                                            // Show the spinner
+                                            //chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner trocar pelo do Seta futuramente
+
+                                            // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
+
+                                            shape = Highcharts.geojson(Highcharts.maps[mapKey]);
+                                            shape.forEach(function (i) {
+                                                i.drilldown = i.properties['hc-key'];
+                                                var value = _self.values[i.properties['hc-key']];
+                                                if (value != undefined) {
+                                                    i.value = value;
+                                                } else {
+                                                    i.value = 0;
+                                                }
+                                                //TODO no terceiro nivel não pode existir mais drilldown.
+                                            });
+
+
+                                            var count = 0;
+                                            var _newself = _self;
+                                            //console.log(_self.dados[count].value);
+
+                                            // data.forEach(function (i) {
+                                            //     //var value = _self.values[i.properties['hc-key']];
+                                            //     if(count <= 45){
+                                            //         i.value = _newself.dados[count].value;
+                                            //     }
+                                            //     else {
+                                            //         i.value = 100;
+                                            //     }
+
+                                            //     //console.log(i.value);  
+                                            //     /*if (value != undefined) {
+                                            //         i.value = value;
+                                            //     } else {
+                                            //         i.value = 0;
+                                            //     }*/
+                                            //     //TODO no terceiro nivel não pode existir mais drilldown.
+                                            //     i.drilldown = i.properties['hc-key'];
+                                            //     count++;
+                                            // });
+
+                                            // Hide loading and add series
+                                            chart.hideLoading();
+                                            clearTimeout(fail);
+                                            chart.addSeriesAsDrilldown(e.point, {
+                                                name: e.point.name,
+                                                data: shape,
+                                                dataLabels: {
+                                                    enabled: false,
+                                                    format: '{point.name}'
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                             }
                         },
                         drillup: function () {
-                            levelDrilldown--;
                             this.setTitle(null, { text: '' });
-                            console.log('entrou no drillup');
+                            levelDrilldown--; //controla em que nivel o drilldown esta
                         }
+                        
                     }
                 },
-            
+
                 title: {
                     text: 'SetaDigital - Mapa de Marcas'
                 },
@@ -235,6 +342,10 @@ export class MapamarcasComponent implements OnInit {
                     mapData: shape,
                     data: dados,
                     name: 'Brasil',
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.properties.postal-code}'
+                    },
                     borderColor: '#7a7a7a',
                     showInLegend: false,
                     joinBy: ['name', 'id'],
@@ -286,11 +397,10 @@ export class MapamarcasComponent implements OnInit {
                
             });
             
-            console.log('caraii');
-            //chart.redraw();
-        
-        });
-    
+            chart.redraw();
+
+            });
+
     };
 
 }

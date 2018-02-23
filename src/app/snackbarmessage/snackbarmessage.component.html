@@ -1,0 +1,6 @@
+<ul> 
+    <li *ngFor="let local of array; let i = index"> 
+      {{ local.nome }} = {{ local.valor }}
+    </li>
+  </ul>
+<a (click)="dismiss()" style="color:orange;">Fechar</a>
