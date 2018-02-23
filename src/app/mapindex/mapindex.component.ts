@@ -66,7 +66,7 @@ export class MapindexComponent implements OnInit {
             // });
 
             // Instantiate the map
-
+            //var secondclick=false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
