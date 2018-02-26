@@ -54,6 +54,7 @@ import { MapService } from './map.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 //import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
+import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.comp
     MapindexComponent,
     MapgastoComponent,
     MapamarcasComponent,
-    SnackbarmessageComponent
+    SnackbarmessageComponent,
+    RelatorioindexComponent
   ],
   entryComponents: [
     MessageComponent,
@@ -118,7 +120,7 @@ import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.comp
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapService],
+  providers: [MapService,RelatorioindexComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

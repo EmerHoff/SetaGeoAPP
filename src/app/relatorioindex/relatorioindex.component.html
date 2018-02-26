@@ -25,17 +25,18 @@
     <button class="buttonStyle2"> Mostrar Markers </button> -->
 
     <div id="container">
-        <div class="loading">
-            <i class="icon-spinner icon-spin icon-large icon-css"></i>
-        </div>
-        <h1>Carregando dados do servidor, aguarde um momento...</h1>
+        dawdwadawdawawwda
+        <ul> 
+            <li *ngFor="let local of jsonRelatorioNome; let i = index"> 
+              {{ local.nome }} = {{ local.valor }}
+            </li>
+          </ul>
     </div>
     <mat-toolbar class="bar">
         <mat-toolbar-row>
-            <button (click)="relatorioClientes()">Mapa</button>
+            <span >Mapa</span>
             <span class="spacer"></span>
-            <button routerLink="/relatorioindex" routerLinkActive="active">Relatorio</button>
-            
+            <span> Gerar PDF</span>
         </mat-toolbar-row>
     </mat-toolbar>
 </body>

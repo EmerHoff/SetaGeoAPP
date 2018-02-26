@@ -7,6 +7,10 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
 import { SnackbarmessageComponent } from '../snackbarmessage/snackbarmessage.component';
 import { MatSnackBar } from '@angular/material';
+import { RelatorioindexComponent } from '../relatorioindex/relatorioindex.component';
+import { AppRoutingModule } from '../app-routing.module';
+
+
 
 declare var Highcharts: any;
 var mensagem: string;
@@ -21,8 +25,17 @@ export class MapindexComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapService, public snackBar: MatSnackBar) {
+    constructor(private clienteService: MapService, public snackBar: MatSnackBar, public relatorio: RelatorioindexComponent) {
 
+    }
+    relatorioClientes(){
+        console.log(this.values);
+        if(this.values != null){
+            this.relatorio.exibir(this.values);
+        }else{
+            alert("Dados não carregados");
+        }
+        
     }
 
     openNav() {
@@ -38,6 +51,9 @@ export class MapindexComponent implements OnInit {
         //melhorar a forma de armazenamento
         var levelDrilldown = 0;
         var _self2 = this;
+
+
+
         Observable.forkJoin(
             this.clienteService.contagemPessoaUFs('BR'),
             this.clienteService.getConfig()
@@ -268,19 +284,6 @@ export class MapindexComponent implements OnInit {
 
                 title: {
                     text: 'SetaDigital - Mapa de clientes'
-                },
-                exporting: {
-                    buttons: {
-                        customButton: {
-                            text: 'Gerar relatorio',
-                            floating: true,
-                            verticalAlign: 'bottom',
-                            align: 'right',
-                            onclick: function () {
-                                _self.openSnackBar("", "Fechar");
-                            }
-                        }
-                    }
                 },
                 subtitle: {
                     text: '',
