@@ -49,11 +49,14 @@ import { MapindexComponent } from './mapindex/mapindex.component';
 import { MapgastoComponent } from './mapgasto/mapgasto.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
-import { MapIndexService } from './mapindex/mapindex.service';
-import { MapGastoService } from './mapgasto/mapgasto.service';
+import { MapService } from './map.service';
+//import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
+//import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
+import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
 
 @NgModule({
   declarations: [
@@ -64,10 +67,13 @@ import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
     MapindexComponent,
     MapgastoComponent,
     MapamarcasComponent,
+    SnackbarmessageComponent,
+    RelatorioindexComponent,
     GeradorPdfComponent
   ],
   entryComponents: [
-    MessageComponent
+    MessageComponent,
+    SnackbarmessageComponent
   ],
   imports: [
     BrowserModule,
@@ -117,7 +123,7 @@ import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapIndexService, MapamarcasService, MapGastoService, GeradorPdfComponent],
+  providers: [MapService, RelatorioindexComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

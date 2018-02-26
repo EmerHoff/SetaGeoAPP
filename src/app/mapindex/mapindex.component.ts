@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Console } from '@angular/core/src/console';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MapIndexService } from './mapindex.service';
+import { MapService } from '../map.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
+import { SnackbarmessageComponent } from '../snackbarmessage/snackbarmessage.component';
+import { MatSnackBar } from '@angular/material';
+import { RelatorioindexComponent } from '../relatorioindex/relatorioindex.component';
+import { AppRoutingModule } from '../app-routing.module';
+
+
 
 declare var Highcharts: any;
+var mensagem: string;
 
 @Component({
     selector: 'app-mapindex',
@@ -18,15 +25,24 @@ export class MapindexComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapIndexService) {
+    constructor(private clienteService: MapService, public snackBar: MatSnackBar, public relatorio: RelatorioindexComponent) {
 
+    }
+    relatorioClientes(){
+        console.log(this.values);
+        if(this.values != null){
+            this.relatorio.exibir(this.values);
+        }else{
+            alert("Dados não carregados");
+        }
+        
     }
 
     openNav() {
         document.getElementById("myMenu").style.width = "50%";
         document.getElementById("myMenu").style.marginTop = "21px";
     }
-    
+
     closeNav() {
         document.getElementById("myMenu").style.width = "0";
     }
@@ -35,15 +51,23 @@ export class MapindexComponent implements OnInit {
         //melhorar a forma de armazenamento
         var levelDrilldown = 0;
         var _self2 = this;
+
+
+
         Observable.forkJoin(
             this.clienteService.contagemPessoaUFs('BR'),
             this.clienteService.getConfig()
         ).subscribe(([res0, res1]) => {
             //console.log("Resultados do forkjoin");
             Highcharts.maps["SETA.BR"] = res1;
-            //console.log(res1)
-            this.values = JSON.parse(res0.toString());
-            //console.log(this.values);
+            //console.log(ress1)
+            // var b = dadosSetaRequisiao.replace("\\", "");
+            var b = res0;
+            var aux = _self2.clienteService.formatJSON(b);
+            _self2.values = JSON.parse(aux.toString());
+            //console.log(_self2.values);
+
+
 
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
@@ -66,14 +90,14 @@ export class MapindexComponent implements OnInit {
             // });
 
             // Instantiate the map
-            //var secondclick=false;
+            var secondclick = false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
                             //TODO Carregar pelo banco as informações dos caras clicados.
                             //e  jogar num objeto chamado Highcharts.maps;
-                            if(levelDrilldown < 2){
+                            if (levelDrilldown < 2) {
                                 levelDrilldown++; //controla em que nivel o drilldown esta
                                 var estado = e.point.drilldown;
                                 var mapKey = e.point.drilldown;
@@ -87,7 +111,13 @@ export class MapindexComponent implements OnInit {
                                     ).subscribe(([res0, res1]) => {
                                         mapKey = e.point.drilldown;
                                         _self.json = res0;
-                                        _self.values = JSON.parse(res1.toString());
+
+
+                                        var b = res1;
+                                        var aux = _self.clienteService.formatJSON(b);
+                                        _self.values = JSON.parse(aux.toString());
+
+
                                         Highcharts.maps[mapKey] = res0;
 
                                         shape = Highcharts.geojson(Highcharts.maps[mapKey]);
@@ -163,9 +193,11 @@ export class MapindexComponent implements OnInit {
 
                                 }
                                 else {
-
+                                    //Caso já tenha sido carregado o shape uma vez, ele faz apenas uma requisição em vez de duas
                                     _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
-                                        _self.values = JSON.parse(res1.toString());
+                                        var b = res1;
+                                        var aux = _self.clienteService.formatJSON(b);
+                                        _self.values = JSON.parse(aux.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
                                         if (!e.seriesOptions) {
                                             var chart = this,
@@ -243,14 +275,13 @@ export class MapindexComponent implements OnInit {
                             this.setTitle(null, { text: '' });
                             levelDrilldown--; //controla em que nivel o drilldown esta
                         }
-                        
+
                     }
                 },
 
                 title: {
                     text: 'SetaDigital - Mapa de clientes'
                 },
-
                 subtitle: {
                     text: '',
                     floating: true,
@@ -307,8 +338,17 @@ export class MapindexComponent implements OnInit {
                         }
                     }
                 }
+
             });
         });
     };
 
+    openSnackBar(message: string, action: string) {
+        mensagem = message;
+        this.snackBar.openFromComponent(SnackbarmessageComponent);
+        //this.snackBar.open(message, action, {
+
+
+        //});
+    }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Console } from '@angular/core/src/console';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MapamarcasService } from './mapamarcas.service';
+import { MapService } from '../map.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
@@ -21,7 +21,7 @@ export class MapamarcasComponent implements OnInit {
     public dateShape: any;
     
 
-    constructor(private clienteService: MapamarcasService) {
+    constructor(private clienteService: MapService) {
 
     }
     

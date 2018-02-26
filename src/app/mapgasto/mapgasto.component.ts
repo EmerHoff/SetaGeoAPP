@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Console } from '@angular/core/src/console';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MapGastoService } from './mapgasto.service';
+import { MapService } from '../map.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
@@ -18,7 +18,7 @@ export class MapgastoComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapGastoService) {
+    constructor(private clienteService: MapService) {
 
     }
 
@@ -41,9 +41,11 @@ export class MapgastoComponent implements OnInit {
         ).subscribe(([res0, res1]) => {
             //console.log("Resultados do forkjoin");
             Highcharts.maps["SETA.BR"] = res1;
-            //console.log(res1)
-            this.values = JSON.parse(res0.toString());
-            //console.log(this.values);
+            //console.log(res0);
+
+            var b = res0;
+            var aux = _self2.clienteService.formatJSON(b);
+            _self2.values = JSON.parse(aux.toString());
 
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
@@ -87,7 +89,9 @@ export class MapgastoComponent implements OnInit {
                                     ).subscribe(([res0, res1]) => {
                                         mapKey = e.point.drilldown;
                                         _self.json = res0;
-                                        _self.values = JSON.parse(res1.toString());
+                                        var b = res1;
+                                        var aux = _self.clienteService.formatJSON(b);
+                                        _self.values = JSON.parse(aux.toString());
                                         Highcharts.maps[mapKey] = res0;
 
                                         shape = Highcharts.geojson(Highcharts.maps[mapKey]);

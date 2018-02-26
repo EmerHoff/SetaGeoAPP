@@ -5,15 +5,18 @@ import { HighmapComponent } from './highmap/highmap.component';
 import { MapindexComponent } from './mapindex/mapindex.component';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapgastoComponent } from './mapgasto/mapgasto.component';
+import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
 
 const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'highmap', component: HighmapComponent },
   { path: 'mapindex', component: MapindexComponent },
+  { path: 'relatorioindex', component: RelatorioindexComponent },
   { path: 'mapamarcas', component: MapamarcasComponent },
   { path: 'mapgasto', component: MapgastoComponent },
-  { path: 'geradorpdf', component: GeradorPdfComponent }
+  { path: 'geradorpdf', component: GeradorPdfComponent },
+  { path: 'testPDF', component: GeradorPdfComponent }
 ];
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
