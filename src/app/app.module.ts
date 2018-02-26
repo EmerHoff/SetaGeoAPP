@@ -53,6 +53,7 @@ import { MapService } from './map.service';
 //import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 //import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
 import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
 import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
 
@@ -66,7 +67,8 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     MapgastoComponent,
     MapamarcasComponent,
     SnackbarmessageComponent,
-    RelatorioindexComponent
+    RelatorioindexComponent,
+    GeradorPdfComponent
   ],
   entryComponents: [
     MessageComponent,
