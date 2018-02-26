@@ -108,6 +108,7 @@ export class MapamarcasService {
     }
     marcaContagemUFs(pais: string): Observable<any> {
         const url = `${this.marcaContagem}/${pais}`;
+        console.log(url);
         return this.http.get(url).map((response: Response) => response);
     }
 

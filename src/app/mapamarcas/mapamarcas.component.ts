@@ -74,44 +74,18 @@ export class MapamarcasComponent implements OnInit {
             });
 
             var dados = [
-                //Estado, marca 1, marca 2, marca 3, marca 4, marca 5, total, ganhador
-                ['São Paulo', 729547, 1318255, 44467, 9391, 100, 2101760, 0],
-                ['Paraná', 116454, 163387, 18725, 5735, 100, 304301, 2],
-                ['Rio Grande do Sul', 1161167, 1252401, 106327, 100, 34345, 2554340, 0],
-                ['Acre', 380494, 684782, 29829, 9473, 100, 1104578, 3],
-                ['Santa Catarina', 8577206, 4390272, 467370, 271047, 100, 13705995, 1],
-                ['Tocantins', 1338870, 1202484, 144121, 38437, 100, 2723912, 4],
-                ['Minas Gerais', 897572, 673215, 48676, 22841, 100, 1642304, 1],
-                ['Rio de Janeiro', 235603, 185127, 14757, 6103, 100, 441590, 3],
-                ['Espírito Santo', 282830, 12723, 4906, 4258, 100, 304717, 1],
-                ['Goiás', 4504975, 4617886, 207043, 64399, 100, 9394303, 2],
-                ['Maranhão', 1877963, 2089104, 125306, 0, 100, 4092373, 2],
-                ['Piauí', 266891, 128847, 15954, 12737, 100, 424429, 1],
-                ['Pernambuco', 189765, 409055, 28331, 8496, 100, 635647, 3],
-                ['Amazonas', 2977498, 2118179, 208682, 74112, 100, 5378471, 1],
-                ['Mato Grosso', 1039126, 1557286, 133993, 7841, 100, 2738246, 4],
-                ['Mato Grosso do Sul', 653669, 800983, 59186, 11479, 100, 1525317, 0],
-                ['Sergipe', 427005, 671018, 55406, 23506, 100, 1176935, 4],
-                ['Roraima', 628854, 1202971, 53752, 13913, 100, 1899490, 0],
-                ['Rondônia', 780154, 1178638, 37978, 14031, 100, 2010801, 2],
-                ['Pará', 352156, 332418, 37578, 13995, 100, 736147, 1],
-                ['Amapá', 1502820, 878615, 78225, 33380, 100, 2493040, 1],
-                ['Bahia', 1995196, 1090893, 138018, 47661, 100, 3271768, 3],
-                ['Rio Grande do Norte', 2268839, 2279543, 172136, 51463, 100, 4771981, 0],
-                ['Alagoas', 1367716, 1322951, 112972, 36985, 100, 2840624, 2],
-                ['Ceará', 462127, 678284, 14411, 3595, 100, 1158417, 0],
-                ['Distrito Federal', 1054889, 1585753, 96404, 25086, 100, 2762132, 3],
-                ['Paraíba', 174281, 273879, 28036, 7868, 100, 484064, 4],
-                ['CASCAVEL', 174281, 273879, 28036, 7868, 100, 484064, 4],
+                //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
+                ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
+                ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
             ],
-            maxVotes = 0,
-            corMarca1 = 'rgba(74, 131, 240, 0.9)',
-            corMarca2 = 'rgba(220,71,71, 0.9)',
-            corMarca3 = 'rgba(240,190,50, 0.9)',
-            corMarca4 = 'rgba(90,200,90, 0.9)',
-            corMarca5 = 'rgba(40,70,50, 0.9)';
+            maxVotes = 0;
 
-            //console.log(dados);
+            var corMarcas = [ ['rgba(74, 131, 240, 0.9)'],
+                              ['rgba(220,71,71, 0.9)'],
+                              ['rgba(240,190,50, 0.9)'],
+                              ['rgba(90,200,90, 0.9)'],
+                              ['rgba(40,70,50, 0.9)']
+            ];
 
             
             var mapKey;
@@ -221,13 +195,13 @@ export class MapamarcasComponent implements OnInit {
                                             shape = Highcharts.geojson(Highcharts.maps[mapKey]);
                                             shape.forEach(function (i) {
                                                 i.drilldown = i.properties['hc-key'];
-                                                var value = _self.values[i.properties['hc-key']];
+                                                /*var value = _self.values[i.properties['hc-key']];
                                                 if (value != undefined) {
                                                     i.value = value;
                                                 } else {
                                                     i.value = 0;
                                                 }
-                                                //TODO no terceiro nivel não pode existir mais drilldown.
+                                                //TODO no terceiro nivel não pode existir mais drilldown.*/
                                             });
 
 
@@ -266,6 +240,7 @@ export class MapamarcasComponent implements OnInit {
                                                     format: '{point.name}'
                                                 }
                                             });
+
                                         }
                                     });
                                 }
@@ -285,30 +260,30 @@ export class MapamarcasComponent implements OnInit {
 
                 colorAxis: {
                     dataClasses: [{
-                        from: 0,
-                        to: 0,
-                        color: 'rgba(74, 131, 240, 0.5)',
-                        name: 'Dakota'
-                    }, {
                         from: 1,
                         to: 1,
-                        color: 'rgba(220,71,71, 0.5)',
-                        name: 'Cavalera'
+                        color: corMarcas[0][0],
+                        name: dados[1][1]
                     }, {
                         from: 2,
                         to: 2,
-                        name: 'Nike',
-                        color: 'rgba(240,190,50, 0.5)'
+                        color: corMarcas[1][0],
+                        name: dados[1][3]
                     }, {
                         from: 3,
-                        to: 3,
-                        name: 'Adidas',
-                        color: 'rgba(90,200,90, 0.5)'
+                        to: 3,                       
+                        color: corMarcas[2][0],
+                        name: dados[1][5]
                     }, {
                         from: 4,
                         to: 4,
-                        name: 'Arezzo',
-                        color: 'rgba(40,70,50, 0.5)'
+                        color: corMarcas[3][0],
+                        name: dados[1][7]
+                    }, {
+                        from: 5,
+                        to: 5,
+                        color: corMarcas[4][0],
+                        name: dados[1][9]    
                     }]
                 },
             
@@ -348,8 +323,8 @@ export class MapamarcasComponent implements OnInit {
                     },
                     borderColor: '#7a7a7a',
                     showInLegend: false,
-                    joinBy: ['name', 'id'],
-                    keys: ['id', 'countMarca1', 'countMarca2', 'countMarca3', 'countMarca4', 'countMarca5',
+                    joinBy: ['hc-key', 'id'],
+                    keys: ['id', 'nomeMarca1', 'quantMarca1', 'nomeMarca2', 'quantMarca2', 'nomeMarca3', 'quantMarca3', 'nomeMarca4', 'quantMarca4', 'nomeMarca5', 'quantMarca5',
                         'total', 'value', 'pieOffset'],
                     tooltip: {
                         headerFormat: '',
@@ -357,11 +332,11 @@ export class MapamarcasComponent implements OnInit {
                             var hoverVotes = this.hoverVotes; // Used by pie only
                             return '<b>' + this.id + ' - Marcas:</b><br/>' +
                                 Highcharts.map([
-                                    ['Dakota', this.countMarca1, corMarca1],
-                                    ['Cavalera', this.countMarca2, corMarca2],
-                                    ['Nike', this.countMarca3, corMarca3],
-                                    ['Adidas', this.countMarca4, corMarca4],
-                                    ['Arezzo', this.countMarca5, corMarca5]
+                                    [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
+                                    [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
+                                    [this.nomeMarca3, this.quantMarca3, corMarcas[2][0]],
+                                    [this.nomeMarca4, this.quantMarca4, corMarcas[3][0]],
+                                    [this.nomeMarca5, this.quantMarca5, corMarcas[4][0]],
                                 ].sort(function (a, b) {
                                     return b[1] - a[1]; // Sort tooltip by most votes
                                 }), function (line) {

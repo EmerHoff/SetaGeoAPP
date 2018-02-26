@@ -45,9 +45,9 @@ export class MapindexComponent implements OnInit {
             this.values = JSON.parse(res0.toString());
             //console.log(this.values);
 
-            var data = Highcharts.geojson(Highcharts.maps['SETA.BR']);
+            var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
-            data.forEach(function (i) {
+            shape.forEach(function (i) {
 
                 //console.log(data);
                 i.drilldown = i.properties['hc-key'];
@@ -90,7 +90,7 @@ export class MapindexComponent implements OnInit {
                                         _self.values = JSON.parse(res1.toString());
                                         Highcharts.maps[mapKey] = res0;
 
-                                        data = Highcharts.geojson(Highcharts.maps[mapKey]);
+                                        shape = Highcharts.geojson(Highcharts.maps[mapKey]);
                                         if (!e.seriesOptions) {
                                             var chart = this,
                                                 mapKey = e.point.drilldown,
@@ -111,7 +111,7 @@ export class MapindexComponent implements OnInit {
                                             // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
 
                                             //data = Highcharts.geojson(Highcharts.maps[mapKey]);
-                                            data.forEach(function (i) {
+                                            shape.forEach(function (i) {
                                                 i.drilldown = i.properties['hc-key'];
                                                 var value = _self.values[i.properties['hc-key']];
                                                 if (value != undefined) {
@@ -152,7 +152,7 @@ export class MapindexComponent implements OnInit {
                                             clearTimeout(fail);
                                             chart.addSeriesAsDrilldown(e.point, {
                                                 name: e.point.name,
-                                                data: data,
+                                                data: shape,
                                                 dataLabels: {
                                                     enabled: false,
                                                     format: '{point.name}'
@@ -186,8 +186,8 @@ export class MapindexComponent implements OnInit {
 
                                             // TODO Isso daqui carrega o script do Mapa Clicado, contudo tem que ser modificado pelo angular depois.
 
-                                            data = Highcharts.geojson(Highcharts.maps[mapKey]);
-                                            data.forEach(function (i) {
+                                            shape = Highcharts.geojson(Highcharts.maps[mapKey]);
+                                            shape.forEach(function (i) {
                                                 i.drilldown = i.properties['hc-key'];
                                                 var value = _self.values[i.properties['hc-key']];
                                                 if (value != undefined) {
@@ -228,7 +228,7 @@ export class MapindexComponent implements OnInit {
                                             clearTimeout(fail);
                                             chart.addSeriesAsDrilldown(e.point, {
                                                 name: e.point.name,
-                                                data: data,
+                                                data: shape,
                                                 dataLabels: {
                                                     enabled: false,
                                                     format: '{point.name}'
@@ -285,7 +285,7 @@ export class MapindexComponent implements OnInit {
                 },
 
                 series: [{
-                    data: data,
+                    data: shape,
                     name: 'Brasil',
                     dataLabels: {
                         enabled: true,
