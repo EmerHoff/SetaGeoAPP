@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { MapIndexService } from '../mapindex/mapindex.service';
+import { MapService } from '../map.service';
 
 @Component({
   selector: 'app-snackbarmessage',
@@ -13,7 +13,7 @@ export class SnackbarmessageComponent implements OnInit {
   public arrayNome:any;
   public arrayValor:any;
   public array:any;
-  constructor(public snackBar: MatSnackBar, public mapservice: MapIndexService) {}
+  constructor(public snackBar: MatSnackBar, public mapservice: MapService) {}
 
   ngOnInit() {
     var _self=this;

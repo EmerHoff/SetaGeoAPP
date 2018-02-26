@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class MapIndexService {
+export class MapService {
 
     constructor(private http: HttpClient) { }
 
@@ -21,10 +21,10 @@ export class MapIndexService {
 
     getShape(nameClicked) {
         var array = nameClicked.split(".");
-        if(array.length == 3){
+        if (array.length == 3) {
             var dataUrl = 'assets/geojson/' + nameClicked + '.json';
         }
-        else if(array.length == 4){
+        else if (array.length == 4) {
             var dataUrl = 'assets/geojson/' + array[2] + '/' + nameClicked + '.json';
         }
         return this.http.get(dataUrl);
@@ -35,49 +35,49 @@ export class MapIndexService {
         return this.http.get(configUrl);
     }
 
-    requisicaoContagem(input: string): Observable<any>{
+    requisicaoContagem(input: string): Observable<any> {
         //SETA.BR.PR.CASCAVEL.CENTRO
         var array = input.split(".");
-        var cont=0;
-        for(var i=0; i<array.length;i++){
+        var cont = 0;
+        for (var i = 0; i < array.length; i++) {
             cont++;
         }
-        if(array.length==2){
+        if (array.length == 2) {
             const url = `${this.contagemPessoas}/${array[1]}`;
-            return  this.http.get(url).map((response: Response) => response);
+            return this.http.get(url).map((response: Response) => response);
         }
-        else if(array.length==3){
-            
+        else if (array.length == 3) {
+
             const url = `${this.contagemPessoas}/${array[1]}/${array[2]}`;
             return this.http.get(url).map((response: Response) => response);
-            
+
         }
-        else if(array.length==4){
-            
+        else if (array.length == 4) {
+
             const url = `${this.contagemPessoas}/${array[1]}/${array[2]}/${array[3]}`;
             return this.http.get(url).map((response: Response) => response);
         }
 
     }
-    requisicaoGasto(input: string): Observable<any>{
+    requisicaoGasto(input: string): Observable<any> {
         //SETA.BR.PR.CASCAVEL.CENTRO
         var array = input.split(".");
-        var cont=0;
-        for(var i=0; i<array.length;i++){
+        var cont = 0;
+        for (var i = 0; i < array.length; i++) {
             cont++;
         }
-        if(array.length==2){
+        if (array.length == 2) {
             const url = `${this.gastoContagem}/${array[1]}`;
-            return  this.http.get(url).map((response: Response) => response);
+            return this.http.get(url).map((response: Response) => response);
         }
-        else if(array.length==3){
-            
+        else if (array.length == 3) {
+
             const url = `${this.gastoContagem}/${array[1]}/${array[2]}`;
             return this.http.get(url).map((response: Response) => response);
-            
+
         }
-        else if(array.length==4){
-            
+        else if (array.length == 4) {
+
             const url = `${this.gastoContagem}/${array[1]}/${array[2]}/${array[3]}`;
             return this.http.get(url).map((response: Response) => response);
         }
@@ -94,8 +94,8 @@ export class MapIndexService {
     // }
     contagemPessoaUFs(pais: string): Observable<any> {
         const url = `${this.contagemPessoas}/${pais}`;
-        return  this.http.get(url).map((response: Response) => response);
-        
+        return this.http.get(url).map((response: Response) => response);
+
     }
 
     marcaContagemBairros(pais: string, estado: string, cidade: string): Observable<any> {
@@ -122,6 +122,17 @@ export class MapIndexService {
     gastoContagemUFs(pais: string): Observable<any> {
         const url = `${this.gastoContagem}/${pais}`;
         return this.http.get(url).map((response: Response) => response);
+    }
+
+    formatJSON(b: any) {
+        console.log(b[0].nome);
+        var aux = "{";
+        for (var i = 0; i < b.length; i++) {
+            aux += "\"" + b[i].nome + "\" : " + b[i].valor + ", ";
+        }
+        aux += "}";
+        aux = aux.replace(", }", "}");
+        return aux;
     }
 
 }

@@ -49,10 +49,10 @@ import { MapindexComponent } from './mapindex/mapindex.component';
 import { MapgastoComponent } from './mapgasto/mapgasto.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
-import { MapIndexService } from './mapindex/mapindex.service';
-import { MapGastoService } from './mapgasto/mapgasto.service';
+import { MapService } from './map.service';
+//import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
-import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+//import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
 
 @NgModule({
@@ -118,7 +118,7 @@ import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.comp
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapIndexService, MapamarcasService, MapGastoService],
+  providers: [MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
