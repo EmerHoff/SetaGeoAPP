@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { AgmCoreModule } from '@agm/core';
-import { MapComponent, MessageComponent} from './map/map.component';
+import { MapComponent, MessageComponent } from './map/map.component';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -43,21 +43,19 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
+  MatPaginatorIntl
 } from '@angular/material';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { HighmapComponent } from './highmap/highmap.component';
 import { MapindexComponent } from './mapindex/mapindex.component';
 import { MapgastoComponent } from './mapgasto/mapgasto.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
 import { MapService } from './map.service';
-//import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
-//import { MapamarcasService } from './mapamarcas/mapamarcas.service';
-import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
-import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,13 +65,10 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     MapindexComponent,
     MapgastoComponent,
     MapamarcasComponent,
-    SnackbarmessageComponent,
-    RelatorioindexComponent,
     GeradorPdfComponent
   ],
   entryComponents: [
-    MessageComponent,
-    SnackbarmessageComponent
+    MessageComponent
   ],
   imports: [
     BrowserModule,
@@ -83,11 +78,22 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatButtonModule,
+    MatButtonToggleModule,
     MatSnackBarModule,
     BrowserModule,
+    MatTabsModule,
+    MatPaginatorModule,
     BrowserAnimationsModule,
     MatNativeDateModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    MatNativeDateModule,
+    MatTableModule,
+    ReactiveFormsModule,
+    MatListModule
   ],
   exports: [
     CdkTableModule,
@@ -123,7 +129,8 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapService, RelatorioindexComponent],
+  providers: [MapService],
   bootstrap: [AppComponent]
+
 })
 export class AppModule { }

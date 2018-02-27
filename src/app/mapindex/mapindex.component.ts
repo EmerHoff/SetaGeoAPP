@@ -5,38 +5,33 @@ import { MapService } from '../map.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
-import { SnackbarmessageComponent } from '../snackbarmessage/snackbarmessage.component';
-import { MatSnackBar } from '@angular/material';
-import { RelatorioindexComponent } from '../relatorioindex/relatorioindex.component';
 import { AppRoutingModule } from '../app-routing.module';
-
-
+import { PageEvent } from '@angular/material';
+import { NgForOf } from '@angular/common';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
 
 declare var Highcharts: any;
 var mensagem: string;
-
+declare let jsPDF;
 @Component({
     selector: 'app-mapindex',
     templateUrl: './mapindex.component.html',
     styleUrls: ['./mapindex.component.css']
 })
 export class MapindexComponent implements OnInit {
-
+    pageEvent: PageEvent;
     public json: any;
     public values: any;
     public dados: any;
-    constructor(private clienteService: MapService, public snackBar: MatSnackBar, public relatorio: RelatorioindexComponent) {
+    public length: any;
+    public jsonRelatorio: any;
+    public nome: any;
+    constructor(private clienteService: MapService) {
 
     }
-    relatorioClientes(){
-        console.log(this.values);
-        if(this.values != null){
-            this.relatorio.exibir(this.values);
-        }else{
-            alert("Dados não carregados");
-        }
-        
-    }
+
+
+
 
     openNav() {
         document.getElementById("myMenu").style.width = "50%";
@@ -47,10 +42,45 @@ export class MapindexComponent implements OnInit {
         document.getElementById("myMenu").style.width = "0";
     }
 
+    convert() {
+        var item = this.jsonRelatorio;
+        if (item != null) {
+            var doc = new jsPDF('p', 'pt');
+            var col = ["Número", "Localização" , "Clientes"];
+            var rows = [];
+
+            for (var key in item) 
+            {
+                var c = new Array();
+                c =  item[key].nome.toString().split(".");
+                var temp = [(parseInt(key) + 1), c[1] + " " + c[2], item[key].valor];
+
+                rows.push(temp);
+            }
+            doc.setDrawColor(0)
+            doc.setFillColor(234,92,63)
+            doc.rect(0, 0, 1000, 40, 'F')
+            doc.setFontSize(25);
+            doc.setTextColor(255,255,255);
+            doc.setFont('helvetica');
+            doc.setFontType('bold');
+            doc.text(180, 30, 'Relatório de Clientes');
+            doc.autoTable(col, rows);
+            if (this.nome != '' && this.nome != null) {
+                doc.save(this.nome + '.pdf');
+            } else if (this.nome == null) {
+            } else {
+                doc.save('Seta Busca.pdf');
+            }
+        }
+        else{ console.log('json.relatorio nulo');}
+    }
+
     ngOnInit() {
         //melhorar a forma de armazenamento
         var levelDrilldown = 0;
         var _self2 = this;
+
 
 
 
@@ -63,6 +93,9 @@ export class MapindexComponent implements OnInit {
             //console.log(ress1)
             // var b = dadosSetaRequisiao.replace("\\", "");
             var b = res0;
+            console.log(b.length);
+            _self2.length = b.length;
+            _self2.jsonRelatorio = b;
             var aux = _self2.clienteService.formatJSON(b);
             _self2.values = JSON.parse(aux.toString());
             //console.log(_self2.values);
@@ -114,6 +147,8 @@ export class MapindexComponent implements OnInit {
 
 
                                         var b = res1;
+                                        _self.length = b.length;
+                                        _self.jsonRelatorio = b;
                                         var aux = _self.clienteService.formatJSON(b);
                                         _self.values = JSON.parse(aux.toString());
 
@@ -196,6 +231,8 @@ export class MapindexComponent implements OnInit {
                                     //Caso já tenha sido carregado o shape uma vez, ele faz apenas uma requisição em vez de duas
                                     _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
                                         var b = res1;
+                                        _self.length = b.length;
+                                        _self.jsonRelatorio = b;
                                         var aux = _self.clienteService.formatJSON(b);
                                         _self.values = JSON.parse(aux.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
@@ -343,12 +380,5 @@ export class MapindexComponent implements OnInit {
         });
     };
 
-    openSnackBar(message: string, action: string) {
-        mensagem = message;
-        this.snackBar.openFromComponent(SnackbarmessageComponent);
-        //this.snackBar.open(message, action, {
 
-
-        //});
-    }
 }
