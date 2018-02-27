@@ -30,6 +30,7 @@ export class GeradorPdfComponent implements OnInit {
    // doc.setTextColor(R, G, B)
    //doc.setFontSize(22)
    //doc.addPage()
+   
 
 
 

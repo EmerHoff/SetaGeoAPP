@@ -53,18 +53,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http/src/client';
 import { MapService } from './map.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
-import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+//import { MapamarcasService } from './mapamarcas/mapamarcas.service';
+
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
+    MapamarcasComponent,
     MessageComponent,
     HighmapComponent,
     MapindexComponent,
     MapgastoComponent,
-    MapamarcasComponent,
     GeradorPdfComponent
   ],
   entryComponents: [
@@ -86,14 +86,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatPaginatorModule,
     BrowserAnimationsModule,
     MatNativeDateModule,
-    HttpClientModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    MatNativeDateModule,
-    MatTableModule,
-    ReactiveFormsModule,
-    MatListModule
+    MatTabsModule,
+    MatPaginatorModule,
+    MatListModule,
+    HttpClientModule
   ],
   exports: [
     CdkTableModule,

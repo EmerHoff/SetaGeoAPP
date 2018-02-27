@@ -124,7 +124,7 @@ export class MapService {
         return this.http.get(url).map((response: Response) => response);
     }
 
-    formatJSON(b: any) {
+    formatJSON(b: any) { // Formata o Json corretamente para usar no Highcharts
         console.log(b[0].nome);
         var aux = "{";
         for (var i = 0; i < b.length; i++) {
@@ -134,5 +134,6 @@ export class MapService {
         aux = aux.replace(", }", "}");
         return aux;
     }
+
 
 }

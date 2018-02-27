@@ -38,15 +38,15 @@ export class MapamarcasComponent implements OnInit {
 
         var levelDrilldown = 0;
         var _self2 = this;
+
         Observable.forkJoin(
             this.clienteService.contagemPessoaUFs('BR'),
             this.clienteService.getConfig()
         ).subscribe(([res0, res1]) => {
-            //console.log("Resultados do forkjoin");
+
             Highcharts.maps["SETA.BR"] = res1;
-            //console.log(res1)
-            this.values = JSON.parse(res0.toString());
-            //console.log(this.values);
+
+            this.values = res0.toString();
 
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
@@ -73,12 +73,14 @@ export class MapamarcasComponent implements OnInit {
                 }
             });
 
-            var dados = [
-                //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
-                ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
+            //colocar os dados dos estados aqui!!!!!!!
+            this.dados = [
+                //Estado, marca 1, quant, marca 2, quant, marca 3, quant, marca 4, quant, marca 5, quant, total, ganhador
                 ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
-            ],
-            maxVotes = 0;
+                ['SETA.BR.RS', '', 0, 'Dakota', 304301, '', 0, '', 0, '', 0, 304301, 2],
+            ];
+            
+            var maxVotes = 0;
 
             var corMarcas = [ ['rgba(74, 131, 240, 0.9)'],
                               ['rgba(220,71,71, 0.9)'],
@@ -86,8 +88,7 @@ export class MapamarcasComponent implements OnInit {
                               ['rgba(90,200,90, 0.9)'],
                               ['rgba(40,70,50, 0.9)']
             ];
-
-            
+  
             var mapKey;
             var _self = this;
             var count = 0;
@@ -96,8 +97,7 @@ export class MapamarcasComponent implements OnInit {
                 chart: {
                     events: {
                         drilldown: function (e) {
-                            //TODO Carregar pelo banco as informações dos caras clicados.
-                            //e  jogar num objeto chamado Highcharts.maps;
+
                             if(levelDrilldown < 2){
                                 levelDrilldown++; //controla em que nivel o drilldown esta
                                 var estado = e.point.drilldown;
@@ -105,22 +105,33 @@ export class MapamarcasComponent implements OnInit {
                                 estado = estado.replace("SETA.BR.", "");
                                 if (Highcharts.maps[mapKey] == null) {
 
-                                    //console.log(estado);
+                                    //Colocar dados das cidades/beirros aqui!!!!!!!!
+                                    _self.dados = [
+                                        //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
+                                        ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
+                                        ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
+                                        ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 2],
+                                        ['SETA.BR.PR.LONDRINA', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 4],
+                                    ];     
+                                    
+                                    _self2 = _self;
+
                                     Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
                                         _self.clienteService.getShape(e.point.drilldown),
                                         _self.clienteService.requisicaoContagem(mapKey)
                                     ).subscribe(([res0, res1]) => {
                                         mapKey = e.point.drilldown;
                                         _self.json = res0;
-                                        _self.values = JSON.parse(res1.toString());
+                                        _self.values = res1.toString();
                                         Highcharts.maps[mapKey] = res0;
 
                                         shape = Highcharts.geojson(Highcharts.maps[mapKey]);
                                         
                                         mapKey = e.point.drilldown;
                                         console.log(mapKey);
-
+                                        
                                         if (!e.seriesOptions) {
+
                                             var chart = this,
                                             mapKey = e.point.drilldown,
                                             //modificar o icon de loading futuramente
@@ -152,12 +163,45 @@ export class MapamarcasComponent implements OnInit {
                                             chart.hideLoading();
                                             clearTimeout(fail);
                                             //console.log(dados);
-                                            chart.addSeriesAsDrilldown(e.point, {                                            
+                                            chart.addSeriesAsDrilldown(e.point, {
+                                                mapData: shape,
+                                                data: _self2.dados,
                                                 name: e.point.name,
-                                                data: shape,
                                                 dataLabels: {
                                                     enabled: false,
                                                     format: '{point.properties.postal-code}'
+                                                },
+                                                borderColor: '#7a7a7a',
+                                                showInLegend: false,
+                                                joinBy: ['hc-key', 'id'],
+                                                keys: ['id', 'nomeMarca1', 'quantMarca1', 'nomeMarca2', 'quantMarca2', 'nomeMarca3', 'quantMarca3', 'nomeMarca4', 'quantMarca4', 'nomeMarca5', 'quantMarca5',
+                                                    'total', 'value', 'pieOffset'],
+                                                tooltip: {
+                                                    headerFormat: '',
+                                                    pointFormatter: function () {
+                                                        var hoverVotes = this.hoverVotes; // Used by pie only
+                                                        return '<b>' + this.id + ' - Marcas:</b><br/>' +
+                                                            Highcharts.map([
+                                                                [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
+                                                                [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
+                                                                [this.nomeMarca3, this.quantMarca3, corMarcas[2][0]],
+                                                                [this.nomeMarca4, this.quantMarca4, corMarcas[3][0]],
+                                                                [this.nomeMarca5, this.quantMarca5, corMarcas[4][0]],
+                                                            ].sort(function (a, b) {
+                                                                return b[1] - a[1]; // Sort tooltip by most votes
+                                                            }), function (line) {
+                                                                return '<span style="color:' + line[2] +
+                                                                    // Colorized bullet
+                                                                    '">\u25CF</span> ' +
+                                                                    // Party and votes
+                                                                    (line[0] === hoverVotes ? '<b>' : '') +
+                                                                    line[0] + ': ' +
+                                                                    Highcharts.numberFormat(line[1], 0) +
+                                                                    (line[0] === hoverVotes ? '</b>' : '') +
+                                                                    '<br/>';
+                                                            }).join('') +
+                                                            '<hr/>Total: ' + Highcharts.numberFormat(this.total, 0);
+                                                    }
                                                 }
                                             });
                                             this.setTitle(null, { text: e.point.name });
@@ -169,9 +213,18 @@ export class MapamarcasComponent implements OnInit {
 
                                 }
                                 else {
+                                    //Colocar dados das cidades/beirros aqui!!!!!!!!
+                                    _self.dados = [
+                                         //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
+                                         ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
+                                         ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
+                                         ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 2],
+                                    ];
+
+                                    _self2 = _self;
 
                                     _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
-                                        _self.values = JSON.parse(res1.toString());
+                                        _self.values = res1.toString();
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
                                         if (!e.seriesOptions) {
                                             var chart = this,
@@ -207,37 +260,48 @@ export class MapamarcasComponent implements OnInit {
 
                                             var count = 0;
                                             var _newself = _self;
-                                            //console.log(_self.dados[count].value);
 
-                                            // data.forEach(function (i) {
-                                            //     //var value = _self.values[i.properties['hc-key']];
-                                            //     if(count <= 45){
-                                            //         i.value = _newself.dados[count].value;
-                                            //     }
-                                            //     else {
-                                            //         i.value = 100;
-                                            //     }
-
-                                            //     //console.log(i.value);  
-                                            //     /*if (value != undefined) {
-                                            //         i.value = value;
-                                            //     } else {
-                                            //         i.value = 0;
-                                            //     }*/
-                                            //     //TODO no terceiro nivel não pode existir mais drilldown.
-                                            //     i.drilldown = i.properties['hc-key'];
-                                            //     count++;
-                                            // });
-
-                                            // Hide loading and add series
                                             chart.hideLoading();
                                             clearTimeout(fail);
                                             chart.addSeriesAsDrilldown(e.point, {
+                                                mapData: shape,
+                                                data: _self2.dados,
                                                 name: e.point.name,
-                                                data: shape,
                                                 dataLabels: {
                                                     enabled: false,
-                                                    format: '{point.name}'
+                                                    format: '{point.properties.postal-code}'
+                                                },
+                                                borderColor: '#7a7a7a',
+                                                showInLegend: false,
+                                                joinBy: ['hc-key', 'id'],
+                                                keys: ['id', 'nomeMarca1', 'quantMarca1', 'nomeMarca2', 'quantMarca2', 'nomeMarca3', 'quantMarca3', 'nomeMarca4', 'quantMarca4', 'nomeMarca5', 'quantMarca5',
+                                                    'total', 'value', 'pieOffset'],
+                                                tooltip: {
+                                                    headerFormat: '',
+                                                    pointFormatter: function () {
+                                                        var hoverVotes = this.hoverVotes; // Used by pie only
+                                                        return '<b>' + this.id + ' - Marcas:</b><br/>' +
+                                                            Highcharts.map([
+                                                                [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
+                                                                [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
+                                                                [this.nomeMarca3, this.quantMarca3, corMarcas[2][0]],
+                                                                [this.nomeMarca4, this.quantMarca4, corMarcas[3][0]],
+                                                                [this.nomeMarca5, this.quantMarca5, corMarcas[4][0]],
+                                                            ].sort(function (a, b) {
+                                                                return b[1] - a[1]; // Sort tooltip by most votes
+                                                            }), function (line) {
+                                                                return '<span style="color:' + line[2] +
+                                                                    // Colorized bullet
+                                                                    '">\u25CF</span> ' +
+                                                                    // Party and votes
+                                                                    (line[0] === hoverVotes ? '<b>' : '') +
+                                                                    line[0] + ': ' +
+                                                                    Highcharts.numberFormat(line[1], 0) +
+                                                                    (line[0] === hoverVotes ? '</b>' : '') +
+                                                                    '<br/>';
+                                                            }).join('') +
+                                                            '<hr/>Total: ' + Highcharts.numberFormat(this.total, 0);
+                                                    }
                                                 }
                                             });
 
@@ -263,27 +327,27 @@ export class MapamarcasComponent implements OnInit {
                         from: 1,
                         to: 1,
                         color: corMarcas[0][0],
-                        name: dados[1][1]
+                        name: _self.dados[0][1]
                     }, {
                         from: 2,
                         to: 2,
                         color: corMarcas[1][0],
-                        name: dados[1][3]
+                        name: _self.dados[0][3]
                     }, {
                         from: 3,
                         to: 3,                       
                         color: corMarcas[2][0],
-                        name: dados[1][5]
+                        name: _self.dados[0][5]
                     }, {
                         from: 4,
                         to: 4,
                         color: corMarcas[3][0],
-                        name: dados[1][7]
+                        name: _self.dados[0][7]
                     }, {
                         from: 5,
                         to: 5,
                         color: corMarcas[4][0],
-                        name: dados[1][9]    
+                        name: _self.dados[0][9]    
                     }]
                 },
             
@@ -315,7 +379,7 @@ export class MapamarcasComponent implements OnInit {
 
                 series: [{
                     mapData: shape,
-                    data: dados,
+                    data: _self.dados,
                     name: 'Brasil',
                     dataLabels: {
                         enabled: true,
