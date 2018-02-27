@@ -28,28 +28,29 @@
                         </div>
                         <h1>Carregando dados do servidor, aguarde um momento...</h1>
                         </div>
-            </mat-tab>
-            <mat-tab label="Relatorio">
+                        </mat-tab>
+                        <mat-tab label="Relatorio">
                             <div id="relatorio">
                                 <h1>Relatório</h1>
-                                    <mat-paginator [length]="length"   [pageSize]="10"   [pageSizeOptions]="[5, 10, 25, 100]" >
-                                    </mat-paginator>
-                                        <!-- <mat-list *ngFor="let local of jsonRelatorio">
-                                        <mat-list-item>{{ local.nome }} : {{ local.valor }}</mat-list-item>
-                                        <mat-divider></mat-divider>
-                                        </mat-list> -->
-                            </div>
-            </mat-tab>
-            <mat-tab label="Gerar PDF">
-                    <div  id="gerarPDF">
-                            Digite o nome do Arquivo:
-                            <input matInput [(ngModel)]="nome">
-                       <mat-button-toggle (click)="convert()">Salvar Busca</mat-button-toggle>
-                    </div>
-            </mat-tab>
+                                <mat-list *ngFor="let local of jsonRelatorio">
+                                    <mat-list-item>{{ local.nome }} : {{ local.valor }}</mat-list-item>
+                                    <mat-divider></mat-divider>
+                                    </mat-list>
+                                    <mat-paginator [length]="length"   [pageSize]="10"   [pageSizeOptions]="[5, 10, 25, 100]">
+                                        </mat-paginator>
 
-            
-            
-    </mat-tab-group>
+                                        </div>
+                                        </mat-tab>
+                                        <mat-tab label="Gerar PDF">
+                                            <div id="gerarPDF">
+                                                Digite o nome do Arquivo:
+                                                <input matInput [(ngModel)]="nome">
+                                                <mat-button-toggle (click)="convert()">Salvar Busca</mat-button-toggle>
+                                            </div>
+                                            </mat-tab>
+
+
+
+                                            </mat-tab-group>
 
 </body>

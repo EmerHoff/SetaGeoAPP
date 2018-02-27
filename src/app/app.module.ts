@@ -54,6 +54,7 @@ import { HttpClient } from '@angular/common/http/src/client';
 import { MapService } from './map.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
+import { FormsModule } from '@angular/forms';
 //import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 
 @NgModule({
@@ -89,6 +90,7 @@ import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
     MatTabsModule,
     MatPaginatorModule,
     MatListModule,
+    FormsModule,
     HttpClientModule
   ],
   exports: [
