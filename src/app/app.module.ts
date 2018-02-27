@@ -52,28 +52,22 @@ import { HttpClient } from '@angular/common/http/src/client';
 import { MapService } from './map.service';
 //import { MapGastoService } from './mapgasto/mapgasto.service';
 import { MapamarcasComponent } from './mapamarcas/mapamarcas.component';
-import { MapamarcasService } from './mapamarcas/mapamarcas.service';
 import { GeradorPdfComponent } from './gerador-pdf/gerador-pdf.component';
 //import { MapamarcasService } from './mapamarcas/mapamarcas.service';
-import { SnackbarmessageComponent } from './snackbarmessage/snackbarmessage.component';
-import { RelatorioindexComponent } from './relatorioindex/relatorioindex.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
+    MapamarcasComponent,
     MessageComponent,
     HighmapComponent,
     MapindexComponent,
     MapgastoComponent,
-    MapamarcasComponent,
-    SnackbarmessageComponent,
-    RelatorioindexComponent,
     GeradorPdfComponent
   ],
   entryComponents: [
-    MessageComponent,
-    SnackbarmessageComponent
+    MessageComponent
   ],
   imports: [
     BrowserModule,
@@ -126,7 +120,7 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [MapService, RelatorioindexComponent],
+  providers: [MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,9 +5,7 @@ import { MapService } from '../map.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
-import { SnackbarmessageComponent } from '../snackbarmessage/snackbarmessage.component';
-import { MatSnackBar, PageEvent } from '@angular/material';
-import { RelatorioindexComponent } from '../relatorioindex/relatorioindex.component';
+import { PageEvent } from '@angular/material';
 import { AppRoutingModule } from '../app-routing.module';
 
 
@@ -27,7 +25,7 @@ export class MapindexComponent implements OnInit {
     public dados: any;
     public jsonRelatorio: any;//Armazena o json pra fazer o Drillup
     public jsonRelatorioNivel: any;//Armazena o json do nivel pra fazer o drillup e mostrar o relatório
-    constructor(private clienteService: MapService, public snackBar: MatSnackBar, public relatorio: RelatorioindexComponent) {
+    constructor(private clienteService: MapService) {
 
     }
 
@@ -356,13 +354,4 @@ export class MapindexComponent implements OnInit {
             });
         });
     };
-
-    openSnackBar(message: string, action: string) {
-        mensagem = message;
-        this.snackBar.openFromComponent(SnackbarmessageComponent);
-        //this.snackBar.open(message, action, {
-
-
-        //});
-    }
 }

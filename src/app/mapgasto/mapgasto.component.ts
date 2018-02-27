@@ -18,36 +18,50 @@ export class MapgastoComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
+    public jsonRelatorio: any;//Armazena o json pra fazer o Drillup
+    public jsonRelatorioNivel: any;//Armazena o json do nivel pra fazer o drillup e mostrar o relatório
     constructor(private clienteService: MapService) {
 
     }
+
+
 
     openNav() {
         document.getElementById("myMenu").style.width = "50%";
         document.getElementById("myMenu").style.marginTop = "21px";
     }
-    
+
     closeNav() {
         document.getElementById("myMenu").style.width = "0";
     }
 
     ngOnInit() {
+        this.jsonRelatorioNivel = new Array();
         //melhorar a forma de armazenamento
         var levelDrilldown = 0;
         var _self2 = this;
+
+
+
         Observable.forkJoin(
             this.clienteService.gastoContagemUFs('BR'),
             this.clienteService.getConfig()
         ).subscribe(([res0, res1]) => {
             //console.log("Resultados do forkjoin");
             Highcharts.maps["SETA.BR"] = res1;
-            //console.log(res0);
-
+            //console.log(ress1)
+            // var b = dadosSetaRequisiao.replace("\\", "");
             var b = res0;
+
+            //var a = JSON.stringify(res0);
+            //_self2.jsonRelatorio = JSON.parse(a.replace(/SETA.BR./g, ""));
+            _self2.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
+            _self2.jsonRelatorioNivel[0]=_self2.jsonRelatorio;
             var aux = _self2.clienteService.formatJSON(b);
             _self2.values = JSON.parse(aux.toString());
+            //console.log(_self2.values);
 
-            console.log(_self2.values);
+
 
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
@@ -70,18 +84,18 @@ export class MapgastoComponent implements OnInit {
             // });
 
             // Instantiate the map
-            //var secondclick=false;
+            var secondclick = false;
             Highcharts.mapChart('container', {
                 chart: {
                     events: {
                         drilldown: function (e) {
                             //TODO Carregar pelo banco as informações dos caras clicados.
                             //e  jogar num objeto chamado Highcharts.maps;
-                            if(levelDrilldown < 2){
+                            if (levelDrilldown < 2) {
                                 levelDrilldown++; //controla em que nivel o drilldown esta
                                 var estado = e.point.drilldown;
                                 var mapKey = e.point.drilldown;
-                                estado = estado.replace("SETA.BR.", "");
+                                estado = estado.replace(/SETA.BR./g, "");
                                 if (Highcharts.maps[mapKey] == null) {
 
                                     //console.log(estado);
@@ -91,9 +105,19 @@ export class MapgastoComponent implements OnInit {
                                     ).subscribe(([res0, res1]) => {
                                         mapKey = e.point.drilldown;
                                         _self.json = res0;
+
+
                                         var b = res1;
+
+                                        //var a = JSON.stringify(res0);
+                                        //a = a.replace("SETA.BR.", "");
+                                        //_self2.jsonRelatorio = JSON.parse(a);
+                                        _self.jsonRelatorioNivel[levelDrilldown] = _self.jsonRelatorio;
+                                        _self.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
                                         var aux = _self.clienteService.formatJSON(b);
                                         _self.values = JSON.parse(aux.toString());
+
+
                                         Highcharts.maps[mapKey] = res0;
 
                                         shape = Highcharts.geojson(Highcharts.maps[mapKey]);
@@ -169,9 +193,17 @@ export class MapgastoComponent implements OnInit {
 
                                 }
                                 else {
-
+                                    //Caso já tenha sido carregado o shape uma vez, ele faz apenas uma requisição em vez de duas
                                     _self.clienteService.requisicaoGasto(mapKey).subscribe((res1) => {
-                                        _self.values = JSON.parse(res1.toString());
+                                        var b = res1;
+
+                                        //var a = JSON.stringify(res0);
+                                        //a = a.replace(/SETA.BR./g, "");
+                                        //_self2.jsonRelatorio = JSON.parse(a);
+                                        _self.jsonRelatorioNivel[levelDrilldown] = _self.jsonRelatorio;
+                                        _self.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
+                                        var aux = _self.clienteService.formatJSON(b);
+                                        _self.values = JSON.parse(aux.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
                                         if (!e.seriesOptions) {
                                             var chart = this,
@@ -248,15 +280,15 @@ export class MapgastoComponent implements OnInit {
                         drillup: function () {
                             this.setTitle(null, { text: '' });
                             levelDrilldown--; //controla em que nivel o drilldown esta
+                            _self.jsonRelatorio = _self.jsonRelatorioNivel[levelDrilldown];
                         }
-                        
+
                     }
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de Gastos Total'
+                    text: 'SetaDigital - Mapa de clientes'
                 },
-
                 subtitle: {
                     text: '',
                     floating: true,
@@ -313,6 +345,7 @@ export class MapgastoComponent implements OnInit {
                         }
                     }
                 }
+
             });
         });
     };

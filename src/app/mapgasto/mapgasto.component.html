@@ -24,10 +24,22 @@
     <!-- <button class="buttonStyle1" (click)="action()">Mostrar/Limpar Mapa</button>
     <button class="buttonStyle2"> Mostrar Markers </button> -->
 
-    <div id="container">
-        <div class="loading">
-            <i class="icon-spinner icon-spin icon-large icon-css"></i>
-        </div>
-        <h1>Carregando dados do servidor, aguarde um momento...</h1>
-    </div>
+    <mat-tab-group class="demo-tab-group">
+            <mat-tab label="Mapa">
+                <div id="container">
+                    <div class="loading">
+                        <i class="icon-spinner icon-spin icon-large icon-css"></i>
+                    </div>
+                    <h1>Carregando dados do servidor, aguarde um momento...</h1>
+                </div>
+            </mat-tab>
+            <mat-tab label="Relatorio">
+                <div>
+                    <mat-list *ngFor="let local of jsonRelatorio">
+                        <mat-list-item>{{ local.nome }} : R$ {{ local.valor }}</mat-list-item>
+                        <mat-divider></mat-divider>
+                    </mat-list>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
 </body>
