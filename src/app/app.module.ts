@@ -87,6 +87,9 @@ import { RelatorioindexComponent } from './relatorioindex/relatorioindex.compone
     BrowserModule,
     BrowserAnimationsModule,
     MatNativeDateModule,
+    MatTabsModule,
+    MatPaginatorModule,
+    MatListModule,
     HttpClientModule
   ],
   exports: [

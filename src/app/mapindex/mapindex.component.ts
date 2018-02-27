@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/Rx';
 import { SnackbarmessageComponent } from '../snackbarmessage/snackbarmessage.component';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, PageEvent } from '@angular/material';
 import { RelatorioindexComponent } from '../relatorioindex/relatorioindex.component';
 import { AppRoutingModule } from '../app-routing.module';
 
@@ -25,18 +25,13 @@ export class MapindexComponent implements OnInit {
     public json: any;
     public values: any;
     public dados: any;
+    public jsonRelatorio: any;//Armazena o json pra fazer o Drillup
+    public jsonRelatorioNivel: any;//Armazena o json do nivel pra fazer o drillup e mostrar o relatório
     constructor(private clienteService: MapService, public snackBar: MatSnackBar, public relatorio: RelatorioindexComponent) {
 
     }
-    relatorioClientes(){
-        console.log(this.values);
-        if(this.values != null){
-            this.relatorio.exibir(this.values);
-        }else{
-            alert("Dados não carregados");
-        }
-        
-    }
+
+
 
     openNav() {
         document.getElementById("myMenu").style.width = "50%";
@@ -48,6 +43,7 @@ export class MapindexComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.jsonRelatorioNivel = new Array();
         //melhorar a forma de armazenamento
         var levelDrilldown = 0;
         var _self2 = this;
@@ -63,6 +59,11 @@ export class MapindexComponent implements OnInit {
             //console.log(ress1)
             // var b = dadosSetaRequisiao.replace("\\", "");
             var b = res0;
+
+            //var a = JSON.stringify(res0);
+            //_self2.jsonRelatorio = JSON.parse(a.replace(/SETA.BR./g, ""));
+            _self2.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
+            _self2.jsonRelatorioNivel[0]=_self2.jsonRelatorio;
             var aux = _self2.clienteService.formatJSON(b);
             _self2.values = JSON.parse(aux.toString());
             //console.log(_self2.values);
@@ -101,7 +102,7 @@ export class MapindexComponent implements OnInit {
                                 levelDrilldown++; //controla em que nivel o drilldown esta
                                 var estado = e.point.drilldown;
                                 var mapKey = e.point.drilldown;
-                                estado = estado.replace("SETA.BR.", "");
+                                estado = estado.replace(/SETA.BR./g, "");
                                 if (Highcharts.maps[mapKey] == null) {
 
                                     //console.log(estado);
@@ -114,6 +115,12 @@ export class MapindexComponent implements OnInit {
 
 
                                         var b = res1;
+
+                                        //var a = JSON.stringify(res0);
+                                        //a = a.replace("SETA.BR.", "");
+                                        //_self2.jsonRelatorio = JSON.parse(a);
+                                        _self.jsonRelatorioNivel[levelDrilldown] = _self.jsonRelatorio;
+                                        _self.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
                                         var aux = _self.clienteService.formatJSON(b);
                                         _self.values = JSON.parse(aux.toString());
 
@@ -196,6 +203,12 @@ export class MapindexComponent implements OnInit {
                                     //Caso já tenha sido carregado o shape uma vez, ele faz apenas uma requisição em vez de duas
                                     _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
                                         var b = res1;
+
+                                        //var a = JSON.stringify(res0);
+                                        //a = a.replace(/SETA.BR./g, "");
+                                        //_self2.jsonRelatorio = JSON.parse(a);
+                                        _self.jsonRelatorioNivel[levelDrilldown] = _self.jsonRelatorio;
+                                        _self.jsonRelatorio = JSON.parse(JSON.stringify(b).replace(/SETA.BR./g, ""));
                                         var aux = _self.clienteService.formatJSON(b);
                                         _self.values = JSON.parse(aux.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
@@ -274,6 +287,7 @@ export class MapindexComponent implements OnInit {
                         drillup: function () {
                             this.setTitle(null, { text: '' });
                             levelDrilldown--; //controla em que nivel o drilldown esta
+                            _self.jsonRelatorio = _self.jsonRelatorioNivel[levelDrilldown];
                         }
 
                     }
