@@ -36,7 +36,7 @@ export class MapgastoComponent implements OnInit {
         var levelDrilldown = 0;
         var _self2 = this;
         Observable.forkJoin(
-            this.clienteService.contagemPessoaUFs('BR'),
+            this.clienteService.gastoContagemUFs('BR'),
             this.clienteService.getConfig()
         ).subscribe(([res0, res1]) => {
             //console.log("Resultados do forkjoin");
@@ -46,6 +46,8 @@ export class MapgastoComponent implements OnInit {
             var b = res0;
             var aux = _self2.clienteService.formatJSON(b);
             _self2.values = JSON.parse(aux.toString());
+
+            console.log(_self2.values);
 
             var shape = Highcharts.geojson(Highcharts.maps['SETA.BR']);
             var _self = _self2;
@@ -85,7 +87,7 @@ export class MapgastoComponent implements OnInit {
                                     //console.log(estado);
                                     Observable.forkJoin(// Faz as duas requisições do shape do banco e adiciona o valor do banco no shape
                                         _self.clienteService.getShape(e.point.drilldown),
-                                        _self.clienteService.requisicaoContagem(mapKey)
+                                        _self.clienteService.requisicaoGasto(mapKey)
                                     ).subscribe(([res0, res1]) => {
                                         mapKey = e.point.drilldown;
                                         _self.json = res0;
@@ -168,7 +170,7 @@ export class MapgastoComponent implements OnInit {
                                 }
                                 else {
 
-                                    _self.clienteService.requisicaoContagem(mapKey).subscribe((res1) => {
+                                    _self.clienteService.requisicaoGasto(mapKey).subscribe((res1) => {
                                         _self.values = JSON.parse(res1.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
                                         if (!e.seriesOptions) {
@@ -252,7 +254,7 @@ export class MapgastoComponent implements OnInit {
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de clientes'
+                    text: 'SetaDigital - Mapa de Gastos Total'
                 },
 
                 subtitle: {
