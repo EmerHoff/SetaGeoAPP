@@ -232,7 +232,7 @@ export class MapamarcasComponent implements OnInit {
                                          ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 1],
                                          ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 2],
                                          ['SETA.BR.PR.LONDRINA', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
-                                         ['SETA.BR.PR.CASCAVEL.CENTRO', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
+                                         ['SETA.BR.PR.CASCAVEL.CENTRO', 'Dakota', 44387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
                                     ];
 
                                     _self2 = _self;
