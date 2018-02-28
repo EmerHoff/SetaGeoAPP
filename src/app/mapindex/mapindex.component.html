@@ -1,7 +1,8 @@
-<body>  
+<body>
     <!--Menu Lateral-->
     <div id="myMenu" class="sidenav">
-        <h1>&#9776;Menu</h1><a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+        <h1>&#9776;Menu</h1>
+        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
         <a href="http://localhost:4200/map">Google Map</a>
         <a href="http://localhost:4200/mapindex">Mapa de Clientes</a>
         <a href="http://localhost:4200/mapamarcas">Mapa de Marcas</a>
@@ -15,27 +16,41 @@
             <span (click)="openNav()">&#9776;Menu</span>
             <span class="spacer"></span>
             <div class="container">
-                <img src="../../assets/LOGO-PARA-LARANJA.png"/>
-            </div>        
+                <img src="../../assets/LOGO-PARA-LARANJA.png" />
+            </div>
         </mat-toolbar-row>
     </mat-toolbar>
+    <mat-tab-groupÂ class="demo-tab-group">
+        <mat-tabÂ label="Mapa">
+            <divÂ id="container">
+                <divÂ class="loading">
+                    <iÂ class="icon-spinner icon-spin icon-large icon-css"></i>
+                        </div>
+                        <h1>Carregando dados do servidor, aguarde um momento...</h1>
+                        </div>
+                        </mat-tab>
+                        <mat-tabÂ label="Relatorio">
+                            <divÂ id="relatorio">
+                                <h1>RelatÃ³rio</h1>
+                                <mat-listÂ *ngFor="let local of jsonRelatorio">
+                                    <mat-list-item>{{ local.nome }} : {{ local.valor }}</mat-list-item>
+                                    <mat-divider></mat-divider>
+                                    </mat-list>
+                                    <mat-paginatorÂ [length]="length" Â Â [pageSize]="10" Â Â [pageSizeOptions]="[5, 10, 25, 100]">
+                                        </mat-paginator>
 
-    <!--Botoes-->
-    <!-- <button class="buttonStyle1" (click)="action()">Mostrar/Limpar Mapa</button>
-    <button class="buttonStyle2"> Mostrar Markers </button> -->
+                                        </div>
+                                        </mat-tab>
+                                        <mat-tabÂ label="Gerar PDF">
+                                            <div id="gerarPDF">
+                                                Digite o nome do Arquivo:
+                                                <input matInput [(ngModel)]="nome">
+                                                <mat-button-toggle (click)="convert()">Salvar Busca</mat-button-toggle>
+                                            </div>
+                                            </mat-tab>
 
-    <div id="container">
-        <div class="loading">
-            <i class="icon-spinner icon-spin icon-large icon-css"></i>
-        </div>
-        <h1>Carregando dados do servidor, aguarde um momento...</h1>
-    </div>
-    <mat-toolbar class="bar">
-        <mat-toolbar-row>
-            <button (click)="relatorioClientes()">Mapa</button>
-            <span class="spacer"></span>
-            <button routerLink="/relatorioindex" routerLinkActive="active">Relatorio</button>
-            
-        </mat-toolbar-row>
-    </mat-toolbar>
+
+
+                                            </mat-tab-group>
+
 </body>
