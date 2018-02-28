@@ -280,15 +280,19 @@ export class MapindexComponent implements OnInit {
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de clientes'
+                    text: 'Mapa de Clientes',
+                    style: {
+                        fontSize: '20px'
+                    },
+                    y: 17,
                 },
                 subtitle: {
-                    text: '',
+                    text: 'Quantidade de clientes',
                     floating: true,
-                    align: 'right',
-                    y: 50,
+                    align: 'center',
+                    y: 30,
                     style: {
-                        fontSize: '16px'
+                        fontSize: '10px'
                     }
                 },
 

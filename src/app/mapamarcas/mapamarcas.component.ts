@@ -76,8 +76,9 @@ export class MapamarcasComponent implements OnInit {
             //colocar os dados dos estados aqui!!!!!!!
             this.dados = [
                 //Estado, marca 1, quant, marca 2, quant, marca 3, quant, marca 4, quant, marca 5, quant, total, ganhador
-                ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
-                ['SETA.BR.RS', '', 0, 'Dakota', 304301, '', 0, '', 0, '', 0, 304301, 2],
+                ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 1],
+                ['SETA.BR.RS', 'Dakota', 304301, '', 43387, '', 127254, '', 57035, '', 11400, 304301, 2],
+                ['SETA.BR.SP', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 0, '', 0, '', 0, 304301, 1],
             ];
             
             var maxVotes = 0;
@@ -108,10 +109,11 @@ export class MapamarcasComponent implements OnInit {
                                     //Colocar dados das cidades/beirros aqui!!!!!!!!
                                     _self.dados = [
                                         //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
-                                        ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
-                                        ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
-                                        ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 2],
-                                        ['SETA.BR.PR.LONDRINA', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 4],
+                                        ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'Vizzano', 45100, 304301, 3],
+                                        ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 1],
+                                        ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 2],
+                                        ['SETA.BR.PR.LONDRINA', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
+                                        ['SETA.BR.PR.CASCAVEL.CENTRO', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
                                     ];     
                                     
                                     _self2 = _self;
@@ -180,7 +182,17 @@ export class MapamarcasComponent implements OnInit {
                                                     headerFormat: '',
                                                     pointFormatter: function () {
                                                         var hoverVotes = this.hoverVotes; // Used by pie only
-                                                        return '<b>' + this.id + ' - Marcas:</b><br/>' +
+                                                        var array = this.id.split(".");
+                                                        if(array.length == 3){
+                                                            var nome = array[2];
+                                                        }
+                                                        else if(array.length == 4){
+                                                            var nome = array[3];
+                                                        }
+                                                        else if(array.length == 5){
+                                                            var nome = array[4];
+                                                        }
+                                                        return '<b>' + nome + ' - Marcas:</b><br/>' +
                                                             Highcharts.map([
                                                                 [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
                                                                 [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
@@ -216,9 +228,11 @@ export class MapamarcasComponent implements OnInit {
                                     //Colocar dados das cidades/beirros aqui!!!!!!!!
                                     _self.dados = [
                                          //Estado, marca 1, quant, marca 2, marca 3, marca 4, marca 5, total, ganhador
-                                         ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'VIZZANO', 45100, 304301, 3],
-                                         ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 1],
-                                         ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'VIZZANO', 11400, 304301, 2],
+                                         ['SETA.BR.RS', 'Dakota', 124454, 'Nike', 63387, 'Cavalera', 181725, 'Adidas', 55735, 'Vizzano', 45100, 304301, 3],
+                                         ['SETA.BR.PR', 'Dakota', 164454, 'Nike', 43387, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 1],
+                                         ['SETA.BR.PR.CASCAVEL', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 2],
+                                         ['SETA.BR.PR.LONDRINA', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
+                                         ['SETA.BR.PR.CASCAVEL.CENTRO', 'Dakota', 43387, 'Nike', 164454, 'Cavalera', 127254, 'Adidas', 57035, 'Vizzano', 11400, 304301, 4],
                                     ];
 
                                     _self2 = _self;
@@ -280,7 +294,17 @@ export class MapamarcasComponent implements OnInit {
                                                     headerFormat: '',
                                                     pointFormatter: function () {
                                                         var hoverVotes = this.hoverVotes; // Used by pie only
-                                                        return '<b>' + this.id + ' - Marcas:</b><br/>' +
+                                                        var array = this.id.split(".");
+                                                        if(array.length == 3){
+                                                            var nome = array[2];
+                                                        }
+                                                        else if(array.length == 4){
+                                                            var nome = array[3];
+                                                        }
+                                                        else if(array.length == 5){
+                                                            var nome = array[4];
+                                                        }
+                                                        return '<b>' + nome + ' - Marcas:</b><br/>' +
                                                             Highcharts.map([
                                                                 [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
                                                                 [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
@@ -319,7 +343,20 @@ export class MapamarcasComponent implements OnInit {
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de Marcas'
+                    text: 'Mapa de Marcas',
+                    style: {
+                        fontSize: '20px'
+                    },
+                    y: 17,
+                },
+                subtitle: {
+                    text: 'Quantidade por marcas mais vendidas',
+                    floating: true,
+                    align: 'center',
+                    y: 30,
+                    style: {
+                        fontSize: '10px'
+                    }
                 },
 
                 colorAxis: {
@@ -394,13 +431,40 @@ export class MapamarcasComponent implements OnInit {
                         headerFormat: '',
                         pointFormatter: function () {
                             var hoverVotes = this.hoverVotes; // Used by pie only
-                            return '<b>' + this.id + ' - Marcas:</b><br/>' +
+                            var array = this.id.split(".");
+                            if(array.length == 3){
+                                var nome = array[2];
+                            }
+                            else if(array.length == 4){
+                                var nome = array[3];
+                            }
+                            else if(array.length == 5){
+                                var nome = array[4];
+                            }
+                            
+                            array = [
+                                [this.nomeMarca1, this.quantMarca1],
+                                [this.nomeMarca2, this.quantMarca2],
+                                [this.nomeMarca3, this.quantMarca3],
+                                [this.nomeMarca4, this.quantMarca4],
+                                [this.nomeMarca5, this.quantMarca5],
+                            ];
+
+                            var aux = 4;
+                            for(var i = 0; i < 5; i++){
+                                if(array[i][0] == ''){
+                                    aux = i - 1;
+                                    break;
+                                }
+                            };
+
+                            /*return '<b>' + nome + ' - Marcas:</b><br/>' +
                                 Highcharts.map([
-                                    [this.nomeMarca1, this.quantMarca1, corMarcas[0][0]],
-                                    [this.nomeMarca2, this.quantMarca2, corMarcas[1][0]],
-                                    [this.nomeMarca3, this.quantMarca3, corMarcas[2][0]],
-                                    [this.nomeMarca4, this.quantMarca4, corMarcas[3][0]],
-                                    [this.nomeMarca5, this.quantMarca5, corMarcas[4][0]],
+                                    [array[0][0], array[0][1], corMarcas[0][0]],
+                                    [array[1][0], array[1][1], corMarcas[1][0]],
+                                    [array[2][0], array[2][1], corMarcas[2][0]],
+                                    [array[3][0], array[3][1], corMarcas[3][0]],
+                                    [array[4][0], array[4][1], corMarcas[4][0]],
                                 ].sort(function (a, b) {
                                     return b[1] - a[1]; // Sort tooltip by most votes
                                 }), function (line) {
@@ -414,7 +478,30 @@ export class MapamarcasComponent implements OnInit {
                                         (line[0] === hoverVotes ? '</b>' : '') +
                                         '<br/>';
                                 }).join('') +
-                                '<hr/>Total: ' + Highcharts.numberFormat(this.total, 0);
+                                '<hr/>Total: ' + Highcharts.numberFormat(this.total, 0);*/
+                                
+                                var teste = '';
+
+                                teste = '<b>' + nome + ' - Marcas:</b><br/>';
+                                for(var i = 0; i <= aux; i++){
+                                teste = teste +
+                                    Highcharts.map([
+                                        [array[i][0], array[i][1], corMarcas[i][0]]
+                                    ], function (line) {
+                                        return '<span style="color:' + line[2] +
+                                            // Colorized bullet
+                                            '">\u25CF</span> ' +
+                                            // Party and votes
+                                            (line[0] === hoverVotes ? '<b>' : '') +
+                                            line[0] + ': ' +
+                                            Highcharts.numberFormat(line[1], 0) +
+                                            (line[0] === hoverVotes ? '</b>' : '') +
+                                            '<br/>';
+                                    });
+                                };
+
+                                teste = teste + '<hr/>Total: ' + Highcharts.numberFormat(this.total, 0);
+                                return teste;
                         }
                     }
                 }],

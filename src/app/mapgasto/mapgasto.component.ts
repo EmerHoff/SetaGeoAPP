@@ -171,7 +171,9 @@ export class MapgastoComponent implements OnInit {
                                 else {
 
                                     _self.clienteService.requisicaoGasto(mapKey).subscribe((res1) => {
-                                        _self.values = JSON.parse(res1.toString());
+                                        var aux = _self.clienteService.formatJSON(res1);
+                                        _self.values = JSON.parse(aux.toString());
+                                        //_self.values = JSON.parse(res1.toString());
                                         //data = Highcharts.geojson(Highcharts.maps[estado]);
                                         if (!e.seriesOptions) {
                                             var chart = this,
@@ -246,7 +248,7 @@ export class MapgastoComponent implements OnInit {
                             }
                         },
                         drillup: function () {
-                            this.setTitle(null, { text: '' });
+                            //this.setTitle(null, { text: '' });
                             levelDrilldown--; //controla em que nivel o drilldown esta
                         }
                         
@@ -254,16 +256,19 @@ export class MapgastoComponent implements OnInit {
                 },
 
                 title: {
-                    text: 'SetaDigital - Mapa de Gastos Total'
-                },
-
-                subtitle: {
-                    text: '',
-                    floating: true,
-                    align: 'right',
-                    y: 50,
+                    text: 'Mapa de Gastos Totais',
                     style: {
-                        fontSize: '16px'
+                        fontSize: '20px'
+                    },
+                    y: 17,
+                },
+                subtitle: {
+                    text: 'Total gasto em reais',
+                    floating: true,
+                    align: 'center',
+                    y: 30,
+                    style: {
+                        fontSize: '10px'
                     }
                 },
 
