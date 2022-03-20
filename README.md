@@ -5,7 +5,7 @@ SetaGeoAPP is a project developed during an internship period for the Computer S
 ## 🚀 Technologies
 This project was developed with the following technologies:
 
-* AngularJS
+* Angular
 * TypeScript
 * HTML
 * CSS
